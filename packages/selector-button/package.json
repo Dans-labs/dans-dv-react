@@ -6,6 +6,7 @@
     "keywords": [],
     "author": "",
     "dependencies": {
+      "@dans-dv/swh-registration": "workspace:*",
       "@mui/material": "^7.1.0",
       "react": "^19.1.0"
     },
