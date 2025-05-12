@@ -1,0 +1,25 @@
+{
+  "name": "dans-dv",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "format": "prettier --experimental-ternaries --write \"**/*.{ts,tsx,md}\"",
+    "dev:eosc": "turbo dev --filter=@dans-dv/eosc",
+    "build:eosc": "turbo build --filter=@dans-dv/eosc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@dans-dv/eslint-config": "workspace:*",
+    "@dans-dv/typescript-config": "workspace:*",
+    "@types/node": "^22.15.17",
+    "turbo": "^2.5.3",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.3.0"
+}
