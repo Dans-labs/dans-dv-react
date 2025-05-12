@@ -26,6 +26,9 @@ importers:
 
   apps/eosc:
     dependencies:
+      '@dans-dv/selector-button':
+        specifier: workspace:*
+        version: link:../../packages/selector-button
       '@dans-dv/theme':
         specifier: workspace:*
         version: link:../../packages/theme

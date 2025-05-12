@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Selector } from '@dans-dv/selector-button'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +18,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more dus
       </p>
+      <Selector />
     </>
   )
 }
