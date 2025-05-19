@@ -21,6 +21,7 @@ export default function Form() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1>Register software with Software Heritage</h1>
+      {/* TODO has to retrieve potential data from codemeta.json file, see https://github.com/codemeta */}
       <Controller
         name="repoUrl"
         control={control}
