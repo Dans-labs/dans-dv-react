@@ -3,7 +3,8 @@ import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { SoftwareHeritageForm } from '@dans-dv/swh-registration'
+import Box from '@mui/material/Box';
+import { SoftwareHeritageForm } from '@dans-dv/swh-registration';
 
 type MenuConfig = {
   swh?: boolean;
@@ -21,12 +22,19 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
   };
 
   return (
-    <div>
+    <Box
+      sx={{
+        mt: 2,        
+      }}
+    >
+
       <Button
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        variant="contained"
+        sx={{ width: '100%' }}
       >
         Advanced edit
       </Button>
@@ -49,9 +57,11 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
       </Menu>
 
       <Drawer open={edit !== null} onClose={() => setEdit(null)}>
-        { edit === 'swh' && <SoftwareHeritageForm /> }
+        <Box sx={{ p: 4 }}>
+          { edit === 'swh' && <SoftwareHeritageForm /> }
+        </Box>
       </Drawer>
 
-    </div>
+    </Box>
   );
 }
