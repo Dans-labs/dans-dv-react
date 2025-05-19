@@ -1,12 +1,41 @@
 import { useApiToken } from "@dans-dv/wrapper";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { TextField } from '@dans-dv/inputs';
+
+type Inputs = {
+  repoUrl: string
+}
 
 export default function Form() {
   const { apiToken } = useApiToken();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  console.log(errors)
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
   return (
-    <div>
-      <h1>Software Heritage Registration Form</h1>
-      <p>This is a placeholder for the Software Heritage registration form.</p>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>Register software with Software Heritage</h1>
+      <Controller
+        name="repoUrl"
+        control={control}
+        rules={{ required: true }}
+        render={({ field }) => 
+          <TextField 
+            {...field} 
+            label="Repository URL"
+            valid={!errors.repoUrl}
+            required
+          />
+        }
+      />
+      <input type="submit" />
       {apiToken}
-    </div>
+      </form>
   );
 }

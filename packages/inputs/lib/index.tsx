@@ -1,0 +1,1 @@
+export { TextFieldInput as TextField } from '../src/TextField';
