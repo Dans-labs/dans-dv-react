@@ -3,4 +3,5 @@ import { createApp } from '@dans-dv/wrapper'
 
 createApp({
   app: <App />,
+  appendToId: 'actionButtonBlock',
 })

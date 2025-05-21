@@ -36,26 +36,4 @@ const devServer = "http://localhost:5173";
     script.src = `${devServer}/src/main.tsx`;
     document.body.appendChild(script);
 
-    // Wait till ReactAppMount is available
-    const interval = setInterval(() => {
-        // Add mounting element
-        const anchor = document.getElementById('actionButtonBlock');
-        let mount = document.getElementById('dans-dv-react-root');
-        if (!mount) {
-            mount = document.createElement('div');
-            mount.id = 'dans-dv-react-root';
-
-            if (anchor) {
-                anchor.appendChild(mount); // ✅ insert inside, preserving existing content
-            } else {
-                document.body.appendChild(mount); // fallback if anchor not found
-            }
-        }
-
-
-        if (window.ReactAppMount) {
-            window.ReactAppMount(mount);
-            clearInterval(interval);
-        }
-    }, 500);
 })();

@@ -9,9 +9,16 @@ import { CacheProvider } from "@emotion/react";
 import CssBaseline from '@mui/material/CssBaseline';
 import { ApiTokenProvider } from './apiTokenContext';
 
-export function createApp({ app, theme }: { app: ReactNode; theme?: Partial<Theme> }) {
-  const container = document.querySelector('#dans-dv-react-root');
-  const shadowContainer = container?.attachShadow({ mode: 'open' });
+export function createApp({ app, appendToId, theme }: { app: ReactNode; appendToId: string; theme?: Partial<Theme> }) {
+  const targetElement = document.querySelector(`#${appendToId}`);
+  const shadowHost = document.createElement('div');
+
+  // Insert the shadow host after the target element
+  targetElement?.parentNode?.insertBefore(shadowHost, targetElement.nextSibling);
+
+  // Create Shadow DOM on the new host
+  const shadowContainer = shadowHost.attachShadow({ mode: 'open' });
+
   const shadowRootElement = document.createElement('div');
   shadowContainer?.appendChild(shadowRootElement);
 
@@ -26,7 +33,10 @@ export function createApp({ app, theme }: { app: ReactNode; theme?: Partial<Them
 
   const customTheme = createTheme(deepmerge(baseTheme(shadowRootElement), theme));
 
-  createRoot(shadowRootElement).render(
+  const reactAppContainer = document.createElement('div');
+  shadowRootElement.appendChild(reactAppContainer);
+
+  createRoot(reactAppContainer).render(
     <StrictMode>
       <CacheProvider value={cache}>
         <ThemeProvider theme={customTheme}>
