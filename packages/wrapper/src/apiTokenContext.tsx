@@ -21,6 +21,7 @@ export const ApiTokenProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // This function fetches the API token from the Dataverse user page
     const fetchApiToken = async () => {
       try {
         const res = await fetch('/dataverseuser.xhtml?selectTab=apiTokenTab');

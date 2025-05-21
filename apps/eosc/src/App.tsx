@@ -1,4 +1,4 @@
-import { Selector } from '@dans-dv/selector-button'
+import { Selector } from '@dans-dv/selector'
 
 function App() {
   return (

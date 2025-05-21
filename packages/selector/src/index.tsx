@@ -4,11 +4,10 @@ import Drawer from '@mui/material/Drawer';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
-import { SoftwareHeritageForm } from '@dans-dv/swh-registration';
-
-type MenuConfig = {
-  swh?: boolean;
-}
+import { getMenuItems } from './menuConfig';
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "./store";
+import { useAppDispatch, useAppSelector } from "./hooks";
 
 export default function MenuButton({ config }: { config: MenuConfig }) {
   const [edit, setEdit] = useState<null | string>(null);
@@ -21,13 +20,15 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
     setAnchorEl(null);
   };
 
+  const menuItems = getMenuItems(config).filter(item => item.isEnabled);
+
   return (
+    <ReduxProvider store={store}>
     <Box
       sx={{
         mt: 2,        
       }}
     >
-
       <Button
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -44,24 +45,30 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
         open={open}
         onClose={handleClose}
       >
-        { config.swh && 
-          <MenuItem 
-            onClick={() => { 
+        {menuItems.map(item => (
+          <MenuItem
+            key={item.key}
+            onClick={() => {
               handleClose();
-              setEdit('swh');
+              setEdit(item.key);
             }}
           >
-              Register with Software Heritage
-          </MenuItem> 
-        }
+            {item.label}
+          </MenuItem>
+        ))}
       </Menu>
 
       <Drawer open={edit !== null} onClose={() => setEdit(null)}>
+        {/* We can add a side menu here, todo */}
         <Box sx={{ p: 4 }}>
-          { edit === 'swh' && <SoftwareHeritageForm /> }
+          {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
+            useAppDispatch,
+            useAppSelector,
+          })}
         </Box>
       </Drawer>
 
     </Box>
+    </ReduxProvider>
   );
 }

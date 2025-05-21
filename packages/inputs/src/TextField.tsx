@@ -29,6 +29,7 @@ export function TextFieldInput({
         rows={multiline ? 4 : undefined}
         value={value}
         onChange={onChange}
+        sx={{ mb: 2 }}
       />
     );
   };

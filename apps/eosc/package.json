@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dans-dv/selector-button": "workspace:*",
+    "@dans-dv/selector": "workspace:*",
     "@dans-dv/wrapper": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/cache": "^11.14.0",
