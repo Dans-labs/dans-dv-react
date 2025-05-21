@@ -10,6 +10,7 @@ import type { RootState, AppDispatch } from "@dans-dv/selector";
 import type { TypedUseSelectorHook } from "react-redux";
 import Alert from '@mui/material/Alert';
 import CircularProgress from "@mui/material/CircularProgress";
+import { Submit, useSubmitDataMutation } from "@dans-dv/submit";
 
 type Person = {
   givenName: string;
@@ -57,8 +58,6 @@ export default function Form({ useAppDispatch, useAppSelector }: {
 
   const repoUrlValue = watch('repoUrl');
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
   // Populate form state when fetch is successful:
   useEffect(() => {
     if (currentData) {
@@ -72,7 +71,7 @@ export default function Form({ useAppDispatch, useAppSelector }: {
   }, [currentData, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <Typography variant="h5" gutterBottom>Register software with Software Heritage</Typography>
       <Typography mb={4}>Enter a repository URL to submit to software heritage. If you included a codemeta.json file in your repository, we will try to fetch that to add additional authors to your dataset.</Typography>
       <Stack direction="row" spacing={1} mb={2} alignItems="flex-start">
@@ -113,7 +112,7 @@ export default function Form({ useAppDispatch, useAppSelector }: {
       { isSuccess && <Alert severity="success" sx={{mb: 2}}>Successfully fetched codemeta.json. Check the authors and contributors fetched below. Missing people? Please update your codemeta.json file. Otherwise, hit submit!</Alert> }
       { currentData && currentData.author && <AuthorWrapper items={currentData.author} type="author" title="Authors" /> }
       { currentData && currentData.contributor && <AuthorWrapper items={currentData.contributor} type="contributor" title="Contributors" /> }
-      <Button type="submit" variant="contained" size="large" disabled={!isValid}>Submit</Button>
+      <Submit disabled={!isValid} getData={handleSubmit(data => data)} />
     </form>
   );
 }

@@ -5,12 +5,14 @@ interface ApiTokenContextValue {
   apiToken: string | null;
   loading: boolean;
   error: string | null;
+  doi: string | null;
 }
 
 const ApiTokenContext = createContext<ApiTokenContextValue>({
   apiToken: null,
   loading: true,
   error: null,
+  doi: null,
 });
 
 export const useApiToken = () => useContext(ApiTokenContext);
@@ -19,6 +21,7 @@ export const ApiTokenProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [apiToken, setApiToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [doi, setDoi] = useState<string | null>(null);
 
   useEffect(() => {
     // This function fetches the API token from the Dataverse user page
@@ -69,10 +72,16 @@ export const ApiTokenProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     fetchApiToken();
+
+    // Fetch DOI from URL
+    const doi = new URL(window.location.href).searchParams.get("persistentId");
+    if (doi) {
+      setDoi(doi);
+    }
   }, []);
 
   return (
-    <ApiTokenContext.Provider value={{ apiToken, loading, error }}>
+    <ApiTokenContext.Provider value={{ apiToken, loading, error, doi }}>
       {children}
     </ApiTokenContext.Provider>
   );

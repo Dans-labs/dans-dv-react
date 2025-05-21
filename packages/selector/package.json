@@ -6,6 +6,7 @@
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@dans-dv/submit": "workspace:*",
     "@dans-dv/swh-registration": "workspace:*",
     "@mui/material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",

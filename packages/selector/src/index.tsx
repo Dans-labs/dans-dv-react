@@ -24,51 +24,51 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
 
   return (
     <ReduxProvider store={store}>
-    <Box
-      sx={{
-        mt: 2,        
-      }}
-    >
-      <Button
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        variant="contained"
-        sx={{ width: '100%' }}
+      <Box
+        sx={{
+          mt: 2,        
+        }}
       >
-        Advanced edit
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-      >
-        {menuItems.map(item => (
-          <MenuItem
-            key={item.key}
-            onClick={() => {
-              handleClose();
-              setEdit(item.key);
-            }}
-          >
-            {item.label}
-          </MenuItem>
-        ))}
-      </Menu>
+        <Button
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+          variant="contained"
+          sx={{ width: '100%' }}
+        >
+          Advanced edit
+        </Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+        >
+          {menuItems.map(item => (
+            <MenuItem
+              key={item.key}
+              onClick={() => {
+                handleClose();
+                setEdit(item.key);
+              }}
+            >
+              {item.label}
+            </MenuItem>
+          ))}
+        </Menu>
 
-      <Drawer open={edit !== null} onClose={() => setEdit(null)}>
-        {/* We can add a side menu here, todo */}
-        <Box sx={{ p: 4, maxWidth: '40rem' }}>
-          {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
-            useAppDispatch,
-            useAppSelector,
-          })}
-        </Box>
-      </Drawer>
+        <Drawer open={edit !== null} onClose={() => setEdit(null)}>
+          {/* We can add a side menu here, todo */}
+          <Box sx={{ p: 4, maxWidth: '40rem' }}>
+            {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
+              useAppDispatch,
+              useAppSelector,
+            })}
+          </Box>
+        </Drawer>
 
-    </Box>
+      </Box>
     </ReduxProvider>
   );
 }
