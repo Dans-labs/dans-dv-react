@@ -62,7 +62,6 @@ export const codemetaApi = createApi({
           if (!fileRes.ok) return { error: { status: fileRes.status, data: 'codemeta.json not found' } };
           const json = await fileRes.json();
           return { data: json };
-
         } catch (err: any) {
           return { error: { status: 500, data: err.message || 'Unknown error' } };
         }
@@ -71,4 +70,4 @@ export const codemetaApi = createApi({
   }),
 });
 
-export const { useLazyFetchCodemetaQuery } = codemetaApi;
+export const { useLazyFetchCodemetaQuery, useFetchCodemetaQuery } = codemetaApi;

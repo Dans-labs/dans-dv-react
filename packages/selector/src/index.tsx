@@ -60,7 +60,7 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
 
       <Drawer open={edit !== null} onClose={() => setEdit(null)}>
         {/* We can add a side menu here, todo */}
-        <Box sx={{ p: 4 }}>
+        <Box sx={{ p: 4, maxWidth: '40rem' }}>
           {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
             useAppDispatch,
             useAppSelector,
