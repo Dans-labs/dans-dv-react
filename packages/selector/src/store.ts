@@ -1,12 +1,14 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import { swhReducer } from "@dans-dv/swh-registration";
+import { swhReducer, codemetaApi } from "@dans-dv/swh-registration";
 
 export const store = configureStore({
   reducer: {
     swh: swhReducer,
+    [codemetaApi.reducerPath]: codemetaApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
+        .concat(codemetaApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
