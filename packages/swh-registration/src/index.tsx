@@ -20,7 +20,6 @@ type Person = {
   '@id'?: string;
 };
 
-
 type Inputs = {
   repoUrl: string;
   authors?: Person[];

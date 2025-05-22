@@ -3,18 +3,12 @@
 export const fileProcessing = [
   {
     value: "create_thumbnail",
-    label: {
-      en: "Create thumbnail",
-      nl: "Genereer thumbnail",
-    },
+    label: "Create thumbnail",
     for: ["video", "images"],
   },
   {
     value: "transcribe_audio",
-    label: {
-      en: "Generate audio transcription",
-      nl: "Genereer audiotranscriptie",
-    },
+    label: "Generate audio transcription",
     for: ["video", "audio"],
   },
 ];

@@ -15,8 +15,38 @@ import IconButton from "@mui/material/IconButton";
 import { getFiles, addFiles } from "./slice";
 import { useFetchSimpleListQuery } from "./api/dansFormats";
 import type { ReduxProps } from "./";
+import type { FileRejection } from "react-dropzone";
 
 const maxFileSize = 1000000 * 1024 * 1024; // 10 GB
+
+export type FileActions = {
+  label: string;
+  value: string;
+  for?: string[];
+}
+export type FileLocation = "local" | "online";
+export type SelectedFile = {
+  type: "selected-file";
+  id: string;
+  name: string;
+  size: number;
+  mimeType: string;
+  location: FileLocation;
+  url: string;
+  lastModified: number;
+  private?: boolean;
+  role?: FileActions;
+  process?: FileActions[];
+  valid?: boolean;
+  embargo?: string;
+  submitProgress?: number;
+  submitSuccess?: boolean;
+  submitError?: boolean;
+  submittedFile?: boolean;
+  state?: string;
+  status?: string;
+  progress?: number;
+};
 
 const FileUpload = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
   const dispatch = useAppDispatch();
@@ -139,13 +169,13 @@ const FileUpload = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom>Upload and process files</Typography>
       <Box
         sx={{
-          border: "1px dashed",
+          border: "1px dashed #ccc",
           borderColor: "neutral.main",
           backgroundColor: isDragActive ? "primary.light" : "transparent",
         }}
+        mb={2}
         p={3}
         {...getRootProps({ className: "dropzone" })}
       >
@@ -171,7 +201,7 @@ const FileUpload = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
         <FileAlert
           files={fileRejections}
           color="error"
-          title="File upload error"
+          title="File error"
         />
       )}
     </>
@@ -186,7 +216,7 @@ const FileAlert = ({
 }: {
   color: "warning" | "error";
   title: string;
-  files: SelectedFile[] | readonly RejectedFiles[];
+  files: SelectedFile[] | readonly FileRejection[];
 }) => {
   const [open, setOpen] = useState(true);
 
@@ -194,7 +224,7 @@ const FileAlert = ({
     <Collapse in={open}>
       <Alert
         severity={color}
-        sx={{ mt: 2 }}
+        sx={{ mb: 2 }}
         action={
           <IconButton
             aria-label="close"
