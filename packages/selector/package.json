@@ -9,6 +9,7 @@
     "@dans-dv/submit": "workspace:*",
     "@dans-dv/swh-registration": "workspace:*",
     "@mui/material": "^7.1.0",
+    "@mui/icons-material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",
     "react": "^19.1.0",
     "react-redux": "^9.2.0"

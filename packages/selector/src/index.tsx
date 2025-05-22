@@ -4,10 +4,19 @@ import Drawer from '@mui/material/Drawer';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import { getMenuItems } from './menuConfig';
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./store";
 import { useAppDispatch, useAppSelector } from "./hooks";
+import ListItemText from '@mui/material/ListItemText';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Tooltip from '@mui/material/Tooltip';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 export default function MenuButton({ config }: { config: MenuConfig }) {
   const [edit, setEdit] = useState<null | string>(null);
@@ -53,21 +62,46 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
                 setEdit(item.key);
               }}
             >
-              {item.label}
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText>{item.label}</ListItemText>
             </MenuItem>
           ))}
         </Menu>
 
         <Drawer open={edit !== null} onClose={() => setEdit(null)}>
-          {/* We can add a side menu here, todo */}
-          <Box sx={{ p: 4, maxWidth: '40rem' }}>
-            {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
-              useAppDispatch,
-              useAppSelector,
-            })}
-          </Box>
+          <Stack direction="row" sx={{ minHeight: '100vh' }}>
+            <List sx={{ borderRight: '1px solid #ccc' }}>
+              {menuItems.map(item => (
+                <ListItem key={item.key} disablePadding>
+                  <Tooltip title={item.label} placement="right">
+                    <ListItemButton onClick={() => setEdit(item.key)}>
+                      <ListItemIcon sx={{ minWidth: 'auto' }}>
+                        {item.icon}
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </Tooltip>
+                </ListItem>
+              ))}
+            </List>
+            <Box sx={{ p: 4, maxWidth: '40rem' }}>
+              {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
+                useAppDispatch,
+                useAppSelector,
+              })}
+            </Box>
+          </Stack>
+          <IconButton 
+            onClick={() => setEdit(null)}
+            sx={{
+              position: 'absolute',
+              top: '1rem',
+              right: '1rem',
+              zIndex: 1,
+            }}
+          >
+            <CloseIcon/>
+          </IconButton>
         </Drawer>
-
       </Box>
     </ReduxProvider>
   );

@@ -13,6 +13,11 @@ export function baseTheme(shadowRootElement: HTMLElement) {
           defaultProps: {
             container: shadowRootElement,
           },
+          styleOverrides: {
+            root: {
+              zIndex: '10000 !important',
+            }
+          }
         },
         MuiModal: {
           defaultProps: {

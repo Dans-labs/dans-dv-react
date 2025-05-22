@@ -2,6 +2,7 @@ import { type ReactElement } from 'react';
 import { SoftwareHeritageForm } from '@dans-dv/swh-registration';
 import type { RootState, AppDispatch } from "./store";
 import { TypedUseSelectorHook } from "react-redux";
+import TerminalIcon from '@mui/icons-material/Terminal';
 
 export type MenuKey = 'swh';
 
@@ -15,6 +16,7 @@ export type MenuItemConfig = {
   label: string;
   isEnabled: boolean;
   renderDrawerContent: (hooks: DrawerRenderProps) => ReactElement;
+  icon: ReactElement;
 };
 
 export type MenuConfig = Partial<Record<MenuKey, boolean>>;
@@ -25,5 +27,6 @@ export const getMenuItems = (config: MenuConfig): MenuItemConfig[] => [
     label: 'Register with Software Heritage',
     isEnabled: !!config.swh,
     renderDrawerContent: (props: DrawerRenderProps) => <SoftwareHeritageForm {...props} />,
+    icon: <TerminalIcon />,
   },
 ];

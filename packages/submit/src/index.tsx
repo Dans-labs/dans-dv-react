@@ -1,33 +1,25 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useApiToken } from "@dans-dv/wrapper";
-import { useSubmitDataMutation } from './api';
+import Alert from '@mui/material/Alert';
+import { getUserFriendlyError } from './api';
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-export function Submit({ disabled, getData }: { disabled: boolean; getData: any }) {
-  const { apiToken, doi } = useApiToken();
-  const [ submitData, { isLoading, isSuccess } ] = useSubmitDataMutation();
-
-  async function handleSubmit() {
-    const data = await getData();
-    console.log(data);
-
-    submitData({
-      apiToken: apiToken,
-      doi: doi,
-    });
-  }
-  
+export function Submit({ disabled, isLoading, isError, error, isSuccess }: { disabled: boolean; isLoading: boolean; isError: boolean; error?: FetchBaseQueryError; isSuccess: boolean }) {  
   return (
-    <Button 
-      variant="contained" 
-      size="large"
-      disabled={disabled || isLoading} 
-      onClick={handleSubmit}
-    >
-      <Stack direction="row" spacing={1} alignItems="center">
-        <span>Submit</span>{isLoading && <CircularProgress size={16} />}
-      </Stack> 
-    </Button>
+    <>
+      {isError && <Alert severity="error" sx={{mb: 2}}>Submission failed. {getUserFriendlyError(error)}</Alert>}
+      {isSuccess && <Alert severity="success" sx={{mb: 2}}>Submission succesful. Refresh the page to see your changes reflected in Dataverse.</Alert>}
+      <Button 
+        variant="contained" 
+        size="large"
+        disabled={disabled || isLoading || isSuccess} 
+        type="submit"
+      >
+        <Stack direction="row" spacing={1} alignItems="center">
+          <span>Submit</span>{isLoading && <CircularProgress size={16} />}
+        </Stack> 
+      </Button>
+    </>
   );
 }

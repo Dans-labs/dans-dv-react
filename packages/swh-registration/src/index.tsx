@@ -6,11 +6,13 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { getField, setField } from './slice';
 import { useLazyFetchCodemetaQuery } from "./codemetaApi";
-import type { RootState, AppDispatch } from "@dans-dv/selector";
+import type { SWHFormState } from "./slice";
 import type { TypedUseSelectorHook } from "react-redux";
 import Alert from '@mui/material/Alert';
 import CircularProgress from "@mui/material/CircularProgress";
 import { Submit, useSubmitDataMutation } from "@dans-dv/submit";
+import { useApiToken } from "@dans-dv/wrapper";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 type Person = {
   givenName: string;
@@ -25,25 +27,23 @@ type Inputs = {
   contributors?: Person[];
 }
 
-const gitRegex = /^(https?:\/\/|git@)(github\.com|gitlab\.com|bitbucket\.org)([:/])([\w./-]+)(\.git)?$/;
+type AppDispatch = (action: any) => any;
+export type RootState = {swh: SWHFormState};
+
+const urlRegex = /^https?:\/\/[\w.-]+(\.[\w.-]+)+[/\w\-._~:/?#[\]@!$&'()*+,;=.]*$/i;
 
 export default function Form({ useAppDispatch, useAppSelector }: {
   useAppDispatch: () => AppDispatch;
   useAppSelector: TypedUseSelectorHook<RootState>;
 }) {
   const dispatch = useAppDispatch();
+  const { apiToken, doi } = useApiToken();
+  const [ submitData, { isLoading: submitLoading, isSuccess: submitSuccess, isError: submitError, error: submitErrorMessage } ] = useSubmitDataMutation();
 
   // Pull initial values from Redux
   const repoUrl = useAppSelector(getField('repoUrl'));
-  const author = useAppSelector(getField('author'));
 
-  const [fetchCodemeta, { currentData, isLoading, isSuccess, isError, isUninitialized, reset }] = useLazyFetchCodemetaQuery();
-
-  useEffect(() => {
-    if (repoUrl) {
-      fetchCodemeta(repoUrl);
-    }
-  }, []);
+  const [fetchCodemeta, { currentData, isLoading, isSuccess, isError, error, isUninitialized, reset }] = useLazyFetchCodemetaQuery();
 
   const {
     control,
@@ -53,12 +53,21 @@ export default function Form({ useAppDispatch, useAppSelector }: {
     setValue,
     reset: resetForm,
   } = useForm<Inputs>({
-    defaultValues: { repoUrl, authors: [], contributors: [] }
+    defaultValues: async () => { 
+      // populate the form with the initial values from Redux
+      const meta: any = repoUrl ? fetchCodemeta(repoUrl) : { author: [], contributor: [] };
+      return ({ 
+        repoUrl: repoUrl, 
+        authors: meta.author, 
+        contributors: meta.contributor,
+      })
+    }
   });
 
+  // Watch for changes to the repoUrl field to enable/disable the fetch button
   const repoUrlValue = watch('repoUrl');
 
-  // Populate form state when fetch is successful:
+  // Poppulate the authors and contributors form fields with data from the codemeta.json file
   useEffect(() => {
     if (currentData) {
       if (currentData.author) {
@@ -70,8 +79,15 @@ export default function Form({ useAppDispatch, useAppSelector }: {
     }
   }, [currentData, setValue]);
 
+  // format data and submit to the API
+  const onSubmit: SubmitHandler<Inputs> = (data) => submitData({
+    data: data,
+    apiToken: apiToken,
+    doi: doi,
+  })
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h5" gutterBottom>Register software with Software Heritage</Typography>
       <Typography mb={4}>Enter a repository URL to submit to software heritage. If you included a codemeta.json file in your repository, we will try to fetch that to add additional authors to your dataset.</Typography>
       <Stack direction="row" spacing={1} mb={2} alignItems="flex-start">
@@ -81,8 +97,8 @@ export default function Form({ useAppDispatch, useAppSelector }: {
           rules={{ 
             required: true,
             pattern: {
-              value: gitRegex,
-              message: "Enter a valid GitHub, GitLab, or Bitbucket repository URL"
+              value: urlRegex,
+              message: "Enter a valid repository URL"
             }
           }}
           render={({ field }) => 
@@ -101,18 +117,36 @@ export default function Form({ useAppDispatch, useAppSelector }: {
             />
           }
         />
-        <Button variant="contained" onClick={() => fetchCodemeta(repoUrl)} sx={{ pt: 2, pb: 2 }} disabled={!gitRegex.test(repoUrlValue) || isLoading}>
+        <Button variant="contained" onClick={() => fetchCodemeta(repoUrl)} sx={{ pt: 2, pb: 2 }} disabled={!urlRegex.test(repoUrlValue) || isLoading}>
           <Stack direction="row" spacing={1} alignItems="center">
             <span>Fetch</span>{isLoading && <CircularProgress size={16} />}
           </Stack>
         </Button>
       </Stack>
-      { isUninitialized && <Typography color="info">Please enter a repository URL and click "Fetch" to load the authors from the codemeta.json file.</Typography> }
-      { isError && <Alert severity="warning" sx={{mb: 2}}>Could not find a codemeta.json. You can add additional authors and contributors manually using the Dataverse metadata editor. If you believe your Git URL is correct, you can still submit your data to Software Heritage.</Alert> }
-      { isSuccess && <Alert severity="success" sx={{mb: 2}}>Successfully fetched codemeta.json. Check the authors and contributors fetched below. Missing people? Please update your codemeta.json file. Otherwise, hit submit!</Alert> }
+      { isUninitialized && <Alert severity="info" sx={{mb: 2}}>Please enter a repository URL and click "Fetch" to load the authors from the codemeta.json file.</Alert> }
+      { !isUninitialized && isError && 
+        <Alert severity="warning" sx={{mb: 2}}>
+          {
+            (error as FetchBaseQueryError)?.status === 404 
+            ? "Repository not found or unreachable." 
+            : `${(error as FetchBaseQueryError)?.data} You can add additional authors and contributors manually using the Dataverse metadata editor. If you believe your Git URL is correct, you can still submit your data to Software Heritage.`
+          }
+        </Alert> 
+      }
+      { !isUninitialized && isSuccess && 
+        <Alert severity="success" sx={{mb: 2}}>
+          Successfully fetched codemeta.json. Check the authors and contributors fetched below. Missing people? Please update your codemeta.json file. Otherwise, hit submit!
+        </Alert> 
+      }
       { currentData && currentData.author && <AuthorWrapper items={currentData.author} type="author" title="Authors" /> }
       { currentData && currentData.contributor && <AuthorWrapper items={currentData.contributor} type="contributor" title="Contributors" /> }
-      <Submit disabled={!isValid} getData={handleSubmit(data => data)} />
+      <Submit 
+        disabled={!isValid || (error as FetchBaseQueryError)?.status === 404 || isUninitialized} 
+        isLoading={submitLoading} 
+        isError={!isUninitialized && submitError} 
+        isSuccess={submitSuccess} 
+        error={submitErrorMessage as FetchBaseQueryError}
+      />
     </form>
   );
 }

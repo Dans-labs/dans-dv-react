@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@dans-dv/selector";
+import { RootState } from "./";
 
-type SWHFormState = {
+export type SWHFormState = {
   repoUrl: string;
   author: string;
 };
