@@ -1,10 +1,12 @@
 import { type ReactElement } from 'react';
 import { SoftwareHeritageForm } from '@dans-dv/swh-registration';
+import { FileUpload } from '@dans-dv/file-upload';
 import type { RootState, AppDispatch } from "./store";
 import { TypedUseSelectorHook } from "react-redux";
 import TerminalIcon from '@mui/icons-material/Terminal';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-export type MenuKey = 'swh';
+export type MenuKey = 'swh' | 'fileUpload';
 
 type DrawerRenderProps = {
   useAppDispatch: () => AppDispatch;
@@ -28,5 +30,12 @@ export const getMenuItems = (config: MenuConfig): MenuItemConfig[] => [
     isEnabled: !!config.swh,
     renderDrawerContent: (props: DrawerRenderProps) => <SoftwareHeritageForm {...props} />,
     icon: <TerminalIcon />,
+  },
+  {
+    key: 'fileUpload',
+    label: 'Enhanced file upload',
+    isEnabled: !!config.fileUpload,
+    renderDrawerContent: (props: DrawerRenderProps) => <FileUpload {...props} />,
+    icon: <CloudUploadIcon />,
   },
 ];

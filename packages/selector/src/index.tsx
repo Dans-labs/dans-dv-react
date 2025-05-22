@@ -83,7 +83,7 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
                 </ListItem>
               ))}
             </List>
-            <Box sx={{ p: 4, maxWidth: '40rem' }}>
+            <Box sx={{ p: 8, pt: 4, pb: 4, maxWidth: '40rem' }}>
               {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
                 useAppDispatch,
                 useAppSelector,

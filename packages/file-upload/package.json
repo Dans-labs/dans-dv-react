@@ -1,18 +1,16 @@
 {
-  "name": "@dans-dv/selector",
+  "name": "@dans-dv/file-upload",
   "main": "lib/index.tsx",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "author": "",
   "dependencies": {
-    "@dans-dv/submit": "workspace:*",
-    "@dans-dv/swh-registration": "workspace:*",
-    "@dans-dv/file-upload": "workspace:*",
-    "@mui/material": "^7.1.0",
     "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",
     "react": "^19.1.0",
+    "react-dropzone": "^14.3.8",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {

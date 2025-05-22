@@ -55,7 +55,7 @@ export default function Form({ useAppDispatch, useAppSelector }: {
   } = useForm<Inputs>({
     defaultValues: async () => { 
       // populate the form with the initial values from Redux
-      const meta: any = repoUrl ? fetchCodemeta(repoUrl) : { author: [], contributor: [] };
+      const meta: any = urlRegex.test(repoUrl) ? fetchCodemeta(repoUrl) : { author: [], contributor: [] };
       return ({ 
         repoUrl: repoUrl, 
         authors: meta.author, 
