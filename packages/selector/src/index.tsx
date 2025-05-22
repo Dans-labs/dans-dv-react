@@ -16,7 +16,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Tooltip from '@mui/material/Tooltip';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
 
 export default function MenuButton({ config }: { config: MenuConfig }) {
   const [edit, setEdit] = useState<null | string>(null);
@@ -69,8 +69,16 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
         </Menu>
 
         <Drawer open={edit !== null} onClose={() => setEdit(null)}>
-          <Stack direction="row" sx={{ minHeight: '100vh' }}>
-            <List sx={{ borderRight: '1px solid #ccc' }}>
+          <Stack direction="row">
+            <List sx={{ borderRight: '1px solid #ccc', position: 'fixed', height: '100vh'}}>
+              <ListItem disablePadding disableGutters sx={{ mb: 1 }}>
+                <ListItemButton onClick={() => setEdit(null)} sx={{ pt: 1.5, pb: 1.5 }} >
+                  <ListItemIcon sx={{ minWidth: 'auto' }}>
+                    <CloseIcon/>
+                  </ListItemIcon>
+                </ListItemButton>
+              </ListItem>
+              <Divider />
               {menuItems.map(item => (
                 <ListItem key={item.key} disablePadding>
                   <Tooltip title={item.label} placement="right">
@@ -83,24 +91,13 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
                 </ListItem>
               ))}
             </List>
-            <Box sx={{ p: 8, pt: 4, pb: 4, maxWidth: '40rem' }}>
+            <Box sx={{ pr: 6, pt: 4, pb: 4, pl: 12, maxWidth: '40rem' }}>
               {edit && menuItems.find(item => item.key === edit)?.renderDrawerContent({
                 useAppDispatch,
                 useAppSelector,
               })}
             </Box>
           </Stack>
-          <IconButton 
-            onClick={() => setEdit(null)}
-            sx={{
-              position: 'absolute',
-              top: '1rem',
-              right: '1rem',
-              zIndex: 1,
-            }}
-          >
-            <CloseIcon/>
-          </IconButton>
         </Drawer>
       </Box>
     </ReduxProvider>
