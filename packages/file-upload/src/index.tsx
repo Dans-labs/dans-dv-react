@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import FileTable from "./FileTable";
-import FileUpload from "./FileUpload";
+import FileUpload, { type SelectedFile } from "./FileUpload";
 import type { TypedUseSelectorHook } from "react-redux";
-import { getFiles, queueFiles, type FileFormState } from "./slice";
+import { getFiles, queueFiles } from "./slice";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { uploadFile } from "./tus";
 import { useApiToken } from "@dans-dv/wrapper";
 
-export type RootState = {files: FileFormState};
+export type RootState = {files: SelectedFile[]};
 export type AppDispatch = () => (action: any) => any;
 export type AppSelector = TypedUseSelectorHook<RootState>;
 export type ReduxProps = {

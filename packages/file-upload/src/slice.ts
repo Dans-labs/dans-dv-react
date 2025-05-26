@@ -2,8 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./";
 import { SelectedFile } from "./FileUpload";
 
-export type FileFormState = SelectedFile[];
-
 const initialState: SelectedFile[] = [];
 
 interface ReduxFileActions<K extends keyof SelectedFile = keyof SelectedFile> {
@@ -31,7 +29,7 @@ export const filesSlice = createSlice({
         file.progress = 0;
       });
     },
-    setFileMeta: <K extends keyof SelectedFile>(state: FileFormState, action: PayloadAction<ReduxFileActions<K>>) => {
+    setFileMeta: <K extends keyof SelectedFile>(state: SelectedFile[], action: PayloadAction<ReduxFileActions<K>>) => {
       // set metadata for this file: restricted status, role, processing, validity etc
       const file = state.find(
         (file: SelectedFile) => file.name === action.payload.name,
