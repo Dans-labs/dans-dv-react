@@ -1,4 +1,4 @@
-import type { GroupedDataObject } from "../../types/Files";
+import type { GroupedDataObject } from "../api/dansFormats";
 
 // Add more from http://en.wikipedia.org/wiki/List_of_file_signatures
 // Not using this at the moment

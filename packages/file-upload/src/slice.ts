@@ -1,10 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./";
-import { SelectedFile, ReduxFileActions } from "./FileUpload";
+import { SelectedFile } from "./FileUpload";
 
-export type FileFormState = [];
+export type FileFormState = SelectedFile[];
 
 const initialState: SelectedFile[] = [];
+
+interface ReduxFileActions<K extends keyof SelectedFile = keyof SelectedFile> {
+  name: string
+  type: K
+  value: SelectedFile[K]
+}
 
 export const filesSlice = createSlice({
   name: "files",
@@ -25,8 +31,7 @@ export const filesSlice = createSlice({
         file.progress = 0;
       });
     },
-    setFileMeta: (state, action: PayloadAction<ReduxFileActions>) => {
-      console.log(action)
+    setFileMeta: <K extends keyof SelectedFile>(state: FileFormState, action: PayloadAction<ReduxFileActions<K>>) => {
       // set metadata for this file: restricted status, role, processing, validity etc
       const file = state.find(
         (file: SelectedFile) => file.name === action.payload.name,
@@ -42,7 +47,6 @@ export const filesSlice = createSlice({
 export const { addFiles, removeFile, setFileMeta, resetFiles, queueFiles } = filesSlice.actions;
 
 // Select values from state
-export const getFiles = (state: RootState) => state.files;
-export const getSingleFile = (name: string) => (state: RootState) => state.files.find(file => file.name === name);
+export const getFiles = (state: RootState): SelectedFile[] => state.files;
 
 export default filesSlice.reducer;

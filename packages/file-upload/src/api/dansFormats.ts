@@ -1,5 +1,35 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+type DansFilesFormat = {
+  "file-extension": string;
+  "mime-type": string[];
+  preferred: boolean;
+  "required-convert-to": string;
+}
+
+type DansFilesResponse = {
+  type: string;
+  description: DansFilesDescription[];
+  format: DansFilesFormat[];
+}
+
+type DansSimpleList = {
+  list: string[];
+}
+
+export type GroupedDataObject = {
+  [key: string]: string[];
+}
+
+type DansFilesDescription = {
+  lang: string;
+  title: string;
+}
+
+type DansGroupedList = {
+  type: GroupedDataObject;
+}
+
 export const dansFormatsApi = createApi({
   reducerPath: "dansFormats",
   baseQuery: fetchBaseQuery({

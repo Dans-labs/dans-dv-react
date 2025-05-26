@@ -16,7 +16,7 @@ export const swhSlice = createSlice({
   initialState,
   reducers: {
     setField<K extends keyof SWHFormState>(
-      state,
+      state: SWHFormState,
       action: PayloadAction<{ field: K; value: SWHFormState[K] }>
     ) {
       state[action.payload.field] = action.payload.value;

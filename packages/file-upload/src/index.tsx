@@ -59,7 +59,7 @@ function FileUploader({useAppSelector, useAppDispatch}: ReduxProps) {
       selectedFiles.find((file) => {
         console.log(file)
         // only call the upload function if file is queued
-        return file?.status === "queued" && uploadFile(file, dispatch, apiToken, doi);
+        return file?.status === "queued" && apiToken && doi && uploadFile(file, dispatch, apiToken, doi);
       });
     }
   }, [selectedFiles]);

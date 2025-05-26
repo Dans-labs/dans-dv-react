@@ -26,8 +26,6 @@ export type FileActions = {
 }
 export type FileLocation = "local" | "online";
 export type SelectedFile = {
-  type: "selected-file";
-  id: string;
   name: string;
   size: number;
   mimeType: string;
@@ -165,8 +163,6 @@ const FileUpload = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
       validator: fileValidator,
     });
 
-  const disabled = false;
-
   return (
     <>
       <Box
@@ -244,13 +240,13 @@ const FileAlert = ({
                 <InsertDriveFileIcon />
               </ListItemIcon>
               <ListItemText
-                primary={file.file?.name || file.name}
+                primary={(file as FileRejection).file?.name || (file as SelectedFile).name}
                 secondary={
-                  file.errors &&
-                  file.errors.map(
+                  (file as FileRejection).errors &&
+                  (file as FileRejection).errors.map(
                     (error, i) =>
                       `${error.message}${
-                        i < file.errors.length - 1 ? " | " : ""
+                        i < (file as FileRejection).errors.length - 1 ? " | " : ""
                       }`,
                   )
                 }

@@ -9,7 +9,6 @@ export function getUserFriendlyError(error: FetchBaseQueryError | unknown): stri
     typeof error.status === "number"
   ) {
     const status = error.status;
-    const data = (error as any).data;
 
     switch (status) {
       case 400:

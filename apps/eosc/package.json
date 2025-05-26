@@ -18,12 +18,11 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@dans-dv/eslint-config": "workspace:*",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "globals": "^16.0.0",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-checker": "^0.9.3"
   }
 }

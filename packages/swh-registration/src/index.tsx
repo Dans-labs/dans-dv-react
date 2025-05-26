@@ -138,8 +138,8 @@ export default function Form({ useAppDispatch, useAppSelector }: {
           Successfully fetched codemeta.json. Check the authors and contributors fetched below. Missing people? Please update your codemeta.json file. Otherwise, hit submit!
         </Alert> 
       }
-      { currentData && <AuthorWrapper items={currentData.author} type="author" title="Authors" /> }
-      { currentData && <AuthorWrapper items={currentData.contributor} type="contributor" title="Contributors" /> }
+      { currentData && <AuthorWrapper items={currentData.author} title="Authors" /> }
+      { currentData && <AuthorWrapper items={currentData.contributor} title="Contributors" /> }
       <Submit 
         disabled={!isValid || (error as FetchBaseQueryError)?.status === 404 || isUninitialized} 
         isLoading={submitLoading} 
@@ -151,11 +151,11 @@ export default function Form({ useAppDispatch, useAppSelector }: {
   );
 }
 
-function AuthorWrapper({items, type, title}) {
+function AuthorWrapper({items, title}: {items?: Person[]; title: string}) {
   return (
     <Box mb={2}>
       <Typography variant="h6" gutterBottom>{title}</Typography>
-      {items?.length > 0 ? items.map((item, i) =>
+      {items && items.length > 0 ? items.map((item, i) =>
         <Stack key={i} direction="row" spacing={1} mb={2}>
           <TextField 
             label="Name"

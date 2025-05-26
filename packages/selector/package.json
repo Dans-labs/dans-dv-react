@@ -3,6 +3,12 @@
   "main": "lib/index.tsx",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    }
+  },
   "keywords": [],
   "author": "",
   "dependencies": {

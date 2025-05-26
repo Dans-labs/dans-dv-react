@@ -5,7 +5,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { getMenuItems } from './menuConfig';
+import { getMenuItems, type MenuConfig } from './menuConfig';
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./store";
 import { useAppDispatch, useAppSelector } from "./hooks";
@@ -17,6 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Tooltip from '@mui/material/Tooltip';
 import CloseIcon from '@mui/icons-material/Close';
 import Divider from '@mui/material/Divider';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function MenuButton({ config }: { config: MenuConfig }) {
   const [edit, setEdit] = useState<null | string>(null);
@@ -45,6 +46,7 @@ export default function MenuButton({ config }: { config: MenuConfig }) {
           onClick={handleClick}
           variant="contained"
           sx={{ width: '100%' }}
+          endIcon={<ArrowDropDownIcon />}
         >
           Advanced edit
         </Button>

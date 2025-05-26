@@ -3,16 +3,13 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TableRow, { TableRowProps } from "@mui/material/TableRow";
+import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import ReplayCircleFilledIcon from "@mui/icons-material/ReplayCircleFilled";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Tooltip from "@mui/material/Tooltip";
@@ -22,7 +19,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useFetchGroupedListQuery } from "./api/dansFormats";
-import type { ReduxProps, AppSelector, AppDispatch } from "./";
+import type { ReduxProps, AppDispatch } from "./";
 import type { SelectedFile } from "./FileUpload";
 import { findFileGroup } from "./utils/fileHelpers";
 
@@ -44,7 +41,7 @@ const FileTable = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
         </TableHead>
         <TableBody>
           {selectedFiles.map((file) => (
-            <FileTableRow key={file.name} file={file} useAppDispatch={useAppDispatch} useAppSelector={useAppSelector} />
+            <FileTableRow key={file.name} file={file} useAppDispatch={useAppDispatch} />
           ))}
         </TableBody>
       </Table>
@@ -91,7 +88,7 @@ const FileActionOptions = ({ file, type, useAppDispatch }: {file: any; type: any
   );
 };
 
-const FileTableRow = ({ file, useAppDispatch, useAppSelector }: {file: SelectedFile; useAppDispatch: AppDispatch; useAppSelector: AppSelector}) => {
+const FileTableRow = ({ file, useAppDispatch }: {file: SelectedFile; useAppDispatch: AppDispatch}) => {
   const dispatch = useAppDispatch();
 
   // Handle progress and manually retrying/restarting of file uploads

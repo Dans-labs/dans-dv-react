@@ -2,6 +2,7 @@
   "name": "dans-dv",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",

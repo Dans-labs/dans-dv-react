@@ -2,6 +2,12 @@
   "name": "@dans-dv/file-upload",
   "main": "lib/index.tsx",
   "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    }
+  },
   "description": "",
   "keywords": [],
   "author": "",
