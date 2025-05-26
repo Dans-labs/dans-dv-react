@@ -30,25 +30,25 @@ const FileTable = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
   const selectedFiles = useAppSelector<SelectedFile[]>(getFiles);
 
   return selectedFiles.length !== 0 ?
-      <TableContainer component={Paper} sx={{ overflow: "hidden" }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ p: 1, width: 10 }} />
-              <TableCell sx={{ p: 1 }}>File name</TableCell>
-              <TableCell sx={{ p: 1 }}>Size</TableCell>
-              <TableCell sx={{ p: 1, width: 10 }}>Private</TableCell>
-              <TableCell sx={{ p: 1, width: 230 }}>Role</TableCell>
-              <TableCell sx={{ p: 1, width: 230 }}>Processing</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {selectedFiles.map((file) => (
-              <FileTableRow key={file.name} file={file} useAppDispatch={useAppDispatch} useAppSelector={useAppSelector} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <TableContainer component={Paper}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ p: 1, width: 10 }} />
+            <TableCell sx={{ p: 1 }}>File name</TableCell>
+            <TableCell sx={{ p: 1 }}>Size</TableCell>
+            <TableCell sx={{ p: 1, width: 10 }}>Private</TableCell>
+            <TableCell sx={{ p: 1, width: 230 }}>Role</TableCell>
+            <TableCell sx={{ p: 1, width: 230 }}>Processing</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {selectedFiles.map((file) => (
+            <FileTableRow key={file.name} file={file} useAppDispatch={useAppDispatch} useAppSelector={useAppSelector} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
     : null;
 };
 
