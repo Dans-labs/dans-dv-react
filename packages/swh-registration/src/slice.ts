@@ -2,13 +2,17 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./";
 
 export type SWHFormState = {
-  repoUrl: string;
+  url: string;
   author: string;
+  name: string;
+  description: string;
 };
 
 const initialState: SWHFormState = {
-  repoUrl: '',
+  url: '',
   author: '',
+  name: '',
+  description: '',
 };
 
 export const swhSlice = createSlice({

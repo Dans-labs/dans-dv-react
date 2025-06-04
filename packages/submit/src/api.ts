@@ -35,17 +35,17 @@ export const submitApi = createApi({
   }),
   endpoints: (build) => ({
     submitData: build.mutation({
-      query: ({ data, apiToken, doi }) => {
+      query: ({ data, apiToken, id }) => {
         // format headers
         const headers = {
           "auth-env-name": import.meta.env.VITE_ENV_NAME,
           "assistant-config-name": import.meta.env.VITE_CONFIG_NAME,
-          "targets-credentials": JSON.stringify(
-            {
-              dataverse_api_key: apiToken,
-              doi: doi,
-            }
-          ),
+          "targets-credentials": JSON.stringify({dataverse_api_key: apiToken}),
+        };
+
+        const body = {
+          id: id,
+          metadata: data,
         };
 
         // log for dev
@@ -53,16 +53,14 @@ export const submitApi = createApi({
           console.log("Submit req headers:");
           console.log(headers);
           console.log("Submit metadata:");
-          console.log(data);
+          console.log(body);
         }
 
-        const submitUrl = `dataset/SUBMIT`;
-
         return {
-          url: `inbox/${submitUrl}`,
+          url: `inbox/dataset/SUBMIT`,
           method: "POST",
           headers: headers,
-          body: data,
+          body: body,
         };
       },
     }),
