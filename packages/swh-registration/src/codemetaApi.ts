@@ -1,5 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+export interface CodeMeta {
+  "@context": string;
+  "@type": "SoftwareSourceCode";
+  name: string;
+  author?: {
+    "@type": string;
+    givenName?: string;
+    familyName?: string;
+    name?: string;
+  }[];
+  codeRepository?: string;
+  description?: string;
+  license?: string;
+  version?: string;
+  [key: string]: any; // fallback for optional fields
+}
+
 // Helper to extract the host, owner, and repo from a Git URL
 function extractRepoInfo(repoUrl: string) {
   try {
@@ -35,7 +52,7 @@ export const codemetaApi = createApi({
   reducerPath: "codemetaApi",
   baseQuery: fetchBaseQuery(),
   endpoints: (build) => ({
-    fetchCodemeta: build.query<any, string>({
+    fetchCodemeta: build.query<CodeMeta, string>({
       async queryFn(repoUrl) {
         const info = extractRepoInfo(repoUrl);
         if (!info) {
