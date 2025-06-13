@@ -1,12 +1,15 @@
 import { type ReactElement } from 'react';
 import { SoftwareHeritageForm } from '@dans-dv/swh-registration';
+import { Keywords } from '@dans-dv/keywords';
 import { FileUpload } from '@dans-dv/file-upload';
 import type { RootState, AppDispatch } from "./store";
 import { TypedUseSelectorHook } from "react-redux";
 import TerminalIcon from '@mui/icons-material/Terminal';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import KeyIcon from '@mui/icons-material/Key';
 
-export type MenuKey = 'swh' | 'fileUpload';
+export type MenuKey = 'swh' | 'fileUpload' | 'keywords';
+export type KeywordsMenuKey = 'wikidata';
 
 type DrawerRenderProps = {
   useAppDispatch: () => AppDispatch;
@@ -21,7 +24,13 @@ export type MenuItemConfig = {
   icon: ReactElement;
 };
 
-export type MenuConfig = Partial<Record<MenuKey, boolean>>;
+export type MenuConfig = {
+  swh?: boolean;
+  fileUpload?: boolean;
+  keywords?: {
+    [K in KeywordsMenuKey]?: boolean;
+  };
+};
 
 export const getMenuItems = (config: MenuConfig): MenuItemConfig[] => [
   {
@@ -37,5 +46,12 @@ export const getMenuItems = (config: MenuConfig): MenuItemConfig[] => [
     isEnabled: !!config.fileUpload,
     renderDrawerContent: (props: DrawerRenderProps) => <FileUpload {...props} />,
     icon: <CloudUploadIcon />,
+  },
+  {
+    key: 'keywords',
+    label: 'Easy keyword management',
+    isEnabled: !!config.keywords,
+    renderDrawerContent: (props: DrawerRenderProps) => <Keywords {...props} config={config.keywords} />,
+    icon: <KeyIcon />,
   },
 ];

@@ -1,28 +1,27 @@
 {
-  "name": "@dans-dv/selector",
+  "name": "@dans-dv/keywords",
   "main": "lib/index.tsx",
   "version": "1.0.0",
-  "description": "",
   "type": "module",
   "exports": {
     ".": {
       "import": "./lib/index.js"
     }
   },
+  "description": "",
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@dans-dv/inputs": "workspace:*",
     "@dans-dv/submit": "workspace:*",
-    "@dans-dv/swh-registration": "workspace:*",
-    "@dans-dv/file-upload": "workspace:*",
-    "@dans-dv/keywords": "workspace:*",
+    "@dans-dv/wrapper": "workspace:*",
     "@mui/material": "^7.1.0",
-    "@mui/icons-material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",
     "react": "^19.1.0",
-    "react-redux": "^9.2.0"
+    "react-hook-form": "^7.56.4"
   },
   "devDependencies": {
-    "@types/react": "^19.1.0"
+    "@types/react": "^19.1.0",
+    "react-redux": "^9.2.0"
   }
 }

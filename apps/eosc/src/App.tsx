@@ -5,6 +5,9 @@ function App() {
     <Selector config={{
       swh: true,
       fileUpload: true,
+      keywords: {
+        wikidata: true,
+      }
     }} />
   )
 }
