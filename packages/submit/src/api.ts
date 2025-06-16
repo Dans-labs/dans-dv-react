@@ -40,7 +40,13 @@ export const submitApi = createApi({
         const headers = {
           "auth-env-name": import.meta.env.VITE_ENV_NAME,
           "assistant-config-name": import.meta.env.VITE_CONFIG_NAME,
-          "targets-credentials": JSON.stringify({dataverse_api_key: apiToken}),
+          "targets-credentials": JSON.stringify([{
+            "target-repo-name": location.hostname,
+            credentials: {
+              username: "API_KEY",
+              password: apiToken,
+            },
+          }]),
         };
 
         const body = {
