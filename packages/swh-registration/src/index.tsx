@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useForm, type SubmitHandler, Controller, useFieldArray } from "react-hook-form";
 import { TextField } from '@dans-dv/inputs';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { getField, setField, setFieldArray, resetValues } from './slice';
@@ -16,6 +15,7 @@ import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { TabHeader } from "@dans-dv/layout";
 
 type Inputs = {
   repository_url: string;
@@ -90,8 +90,10 @@ export default function Form({ useAppDispatch, useAppSelector }: {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Typography variant="h5" gutterBottom>Register software with Software Heritage</Typography>
-      <Typography mb={4}>Enter a repository URL to submit to software heritage. If you included a codemeta.json file in your repository, we will try to fetch that to add additional authors to your dataset.</Typography>
+      <TabHeader 
+        title="Register software with Software Heritage"
+        subtitle="Enter a repository URL to submit to software heritage. If you included a codemeta.json file in your repository, we will try to fetch that to add additional authors to your dataset."
+      />
       <Stack direction="row" spacing={1} mb={2} alignItems="flex-start">
         <Controller
           name="repository_url"

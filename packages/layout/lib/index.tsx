@@ -1,0 +1,1 @@
+export { TabHeader, SubHeader } from "../src/Header";

@@ -3,10 +3,10 @@ import FileTable from "./FileTable";
 import FileUpload, { type SelectedFile } from "./FileUpload";
 import type { TypedUseSelectorHook } from "react-redux";
 import { getFiles, queueFiles } from "./slice";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { uploadFile } from "./tus";
 import { useApiToken } from "@dans-dv/wrapper";
+import { TabHeader } from "@dans-dv/layout";
 
 export type RootState = {files: SelectedFile[]};
 export type AppDispatch = () => (action: any) => any;
@@ -22,8 +22,10 @@ export default function Files(props: ReduxProps) {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom>Upload and process files</Typography>
-      <Typography mb={4}>Add (very large) files to your dataset, add additional metadata per file, and select processing options.</Typography>
+      <TabHeader
+        title="Upload and process files"
+        subtitle="Add (very large) files to your dataset, add additional metadata per file, and select processing options."
+      />
       <FileUpload {...props} />
       <FileTable {...props} />
       <Button 

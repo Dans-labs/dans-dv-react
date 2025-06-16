@@ -1,5 +1,5 @@
 {
-  "name": "@dans-dv/file-upload",
+  "name": "@dans-dv/layout",
   "main": "lib/index.tsx",
   "version": "1.0.0",
   "type": "module",
@@ -12,15 +12,9 @@
   "keywords": [],
   "author": "",
   "dependencies": {
-    "@dans-dv/layout": "workspace:*",
-    "@dans-dv/wrapper": "workspace:*",
-    "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
-    "@reduxjs/toolkit": "^2.8.2",
-    "react": "^19.1.0",
-    "react-dropzone": "^14.3.8",
-    "react-redux": "^9.2.0",
-    "tus-js-client": "^4.3.1"
+    "@mui/icons-material": "^7.1.0",
+    "react": "^19.1.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.0"

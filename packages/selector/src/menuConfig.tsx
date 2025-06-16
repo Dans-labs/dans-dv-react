@@ -9,7 +9,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import KeyIcon from '@mui/icons-material/Key';
 
 export type MenuKey = 'swh' | 'fileUpload' | 'keywords';
-export type KeywordsMenuKey = 'wikidata';
+export type KeywordsMenuKey = 'wikidata' | 'geonames' | 'elsst' | 'narcis' | 'dansCollections' | 'gettyAat';
 
 type DrawerRenderProps = {
   useAppDispatch: () => AppDispatch;
@@ -20,7 +20,7 @@ export type MenuItemConfig = {
   key: MenuKey;
   label: string;
   isEnabled: boolean;
-  renderDrawerContent: (hooks: DrawerRenderProps) => ReactElement;
+  renderDrawerContent: (hooks: DrawerRenderProps) => ReactElement | null;
   icon: ReactElement;
 };
 
@@ -51,7 +51,7 @@ export const getMenuItems = (config: MenuConfig): MenuItemConfig[] => [
     key: 'keywords',
     label: 'Easy keyword management',
     isEnabled: !!config.keywords,
-    renderDrawerContent: (props: DrawerRenderProps) => <Keywords {...props} config={config.keywords} />,
+    renderDrawerContent: (props: DrawerRenderProps) => config.keywords ? <Keywords {...props} config={config.keywords} /> : null,
     icon: <KeyIcon />,
   },
 ];

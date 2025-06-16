@@ -7,6 +7,7 @@ function App() {
       fileUpload: true,
       keywords: {
         wikidata: true,
+        gettyAat: true,
       }
     }} />
   )
