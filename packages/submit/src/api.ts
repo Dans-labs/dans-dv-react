@@ -35,7 +35,7 @@ export const submitApi = createApi({
   }),
   endpoints: (build) => ({
     submitData: build.mutation({
-      query: ({ data, apiToken, id }) => {
+      query: ({ data, apiToken, id, files }) => {
         // format headers
         const headers = {
           "auth-env-name": import.meta.env.VITE_ENV_NAME,
@@ -45,7 +45,8 @@ export const submitApi = createApi({
 
         const body = {
           id: id,
-          metadata: data,
+          ...(data && { metadata: data }),
+          ...(files && { "file-metadata": files }),
         };
 
         // log for dev

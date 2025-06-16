@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import { TabHeader, SubHeader } from "@dans-dv/layout";
 import { Submit, useSubmitDataMutation } from "@dans-dv/submit";
 import { useApiToken } from "@dans-dv/wrapper";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 type AppDispatch = (action: any) => any;
 export type RootState = {keywords: KeywordsFormState};
@@ -72,12 +73,12 @@ export function KeywordFields({ config, useAppDispatch, useAppSelector }: {
       )}
 
       <Submit 
-        // disabled={!isValid || !hasData} 
+        disabled={!Object.values(keywords).some(arr => arr.length > 0)} 
         isLoading={submitLoading} 
-        // isError={!isUninitialized && submitError} 
+        isError={submitError} 
         isSuccess={submitSuccess} 
         error={submitErrorMessage as FetchBaseQueryError}
-        // onClick={() => submitData({ keywords: keywords, doi: doi, apiToken: apiToken })}
+        onClick={() => submitData({ data: keywords, doi: doi, apiToken: apiToken })}
       />
 
     </Box>

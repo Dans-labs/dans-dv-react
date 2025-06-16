@@ -208,7 +208,7 @@ function AuthorArray({ control, dispatch }: { control: any, dispatch: AppDispatc
           render={({ field: innerField }) => 
             <TextField 
               {...innerField} 
-              label="Name"
+              label="Author name"
               required
               sx={{mb: 0}}
               onChange={(e) => innerField.onChange(e.target.value)}

@@ -13,6 +13,7 @@
   "author": "",
   "dependencies": {
     "@dans-dv/layout": "workspace:*",
+    "@dans-dv/submit": "workspace:*",
     "@dans-dv/wrapper": "workspace:*",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",

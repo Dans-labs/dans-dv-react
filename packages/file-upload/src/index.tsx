@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { uploadFile } from "./tus";
 import { useApiToken } from "@dans-dv/wrapper";
 import { TabHeader } from "@dans-dv/layout";
+import { useSubmitDataMutation } from "@dans-dv/submit";
 
 export type RootState = {files: SelectedFile[]};
 export type AppDispatch = () => (action: any) => any;
@@ -19,6 +20,8 @@ export type ReduxProps = {
 export default function Files(props: ReduxProps) {
   const dispatch = props.useAppDispatch();
   const selectedFiles = props.useAppSelector(getFiles);
+  const [ submitData, { isLoading: submitLoading } ] = useSubmitDataMutation();
+  const { apiToken, doi } = useApiToken();
 
   return (
     <>
@@ -32,9 +35,15 @@ export default function Files(props: ReduxProps) {
         variant="contained" 
         color="primary" 
         size="large" 
-        onClick={() => dispatch(queueFiles())} 
+        onClick={() => 
+          submitData({
+            files: selectedFiles,
+            apiToken: apiToken,
+            id: doi,
+          }).then(() => dispatch(queueFiles()))
+        } 
         sx={{ mt: 2 }}
-        disabled={selectedFiles.length === 0 || selectedFiles.some((file) => file.status === "queued")}
+        disabled={selectedFiles.length === 0 || selectedFiles.some((file) => file.status === "queued" || submitLoading)}
       >
         Upload
       </Button>

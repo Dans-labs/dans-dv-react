@@ -8,6 +8,7 @@ function App() {
       keywords: {
         wikidata: true,
         gettyAat: true,
+        elsst: true,
       }
     }} />
   )

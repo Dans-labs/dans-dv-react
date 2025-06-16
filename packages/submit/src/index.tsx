@@ -5,7 +5,14 @@ import Alert from '@mui/material/Alert';
 import { getUserFriendlyError } from './api';
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-export function Submit({ disabled, isLoading, isError, error, isSuccess }: { disabled: boolean; isLoading: boolean; isError: boolean; error?: FetchBaseQueryError; isSuccess: boolean }) {  
+export function Submit({ disabled, isLoading, isError, error, isSuccess, onClick }: { 
+  disabled: boolean; 
+  isLoading: boolean; 
+  isError: boolean; 
+  error?: FetchBaseQueryError; 
+  isSuccess: boolean;
+  onClick?: () => void;
+ }) {  
   return (
     <>
       {isError && <Alert severity="error" sx={{mb: 2}}>Submission failed. {getUserFriendlyError(error)}</Alert>}
@@ -15,6 +22,7 @@ export function Submit({ disabled, isLoading, isError, error, isSuccess }: { dis
         size="large"
         disabled={disabled || isLoading || isSuccess} 
         type="submit"
+        onClick={() => typeof onClick === "function" && onClick()}
       >
         <Stack direction="row" spacing={1} alignItems="center">
           <span>Submit</span>{isLoading && <CircularProgress size={16} />}

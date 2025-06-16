@@ -93,6 +93,9 @@ importers:
       '@dans-dv/layout':
         specifier: workspace:*
         version: link:../layout
+      '@dans-dv/submit':
+        specifier: workspace:*
+        version: link:../submit
       '@dans-dv/wrapper':
         specifier: workspace:*
         version: link:../wrapper
