@@ -6,7 +6,7 @@ import { getFiles, queueFiles } from "./slice";
 import Button from "@mui/material/Button";
 import { uploadFile } from "./tus";
 import { useApiToken } from "@dans-dv/wrapper";
-import { TabHeader } from "@dans-dv/layout";
+import { TabHeader, BoxWrap } from "@dans-dv/layout";
 import { useSubmitDataMutation } from "@dans-dv/submit";
 
 export type RootState = {files: SelectedFile[]};
@@ -24,7 +24,7 @@ export default function Files(props: ReduxProps) {
   const { apiToken, doi } = useApiToken();
 
   return (
-    <>
+    <BoxWrap width={50}>
       <TabHeader
         title="Upload and process files"
         subtitle="Add (very large) files to your dataset, add additional metadata per file, and select processing options."
@@ -48,7 +48,7 @@ export default function Files(props: ReduxProps) {
         Upload
       </Button>
       <FileUploader {...props} />
-    </>
+    </BoxWrap>
   );
 }
 

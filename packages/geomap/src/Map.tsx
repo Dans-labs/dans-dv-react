@@ -8,29 +8,21 @@ import {
 } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import type { TypedUseSelectorHook } from "react-redux";
 
-import { setField, getField } from "./slice";
+import { type CoordinateSystem, type ExtendedMapFeature, type OptionsType } from "./slice";
 
 import GLMap, {
-  ScaleControl,
-  NavigationControl,
+  // ScaleControl,
+  // NavigationControl,
   useControl,
-  Source,
-  Layer,
-  useMap,
   type LngLatBoundsLike,
   type MapRef,
 } from "react-map-gl/maplibre";
+
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import "maplibre-gl/dist/maplibre-gl.css";
+// import "maplibre-gl/dist/maplibre-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./Map.css";
 import type { Point, Polygon, LineString } from "geojson";
@@ -47,23 +39,17 @@ import PentagonIcon from "@mui/icons-material/Pentagon";
 import {
   useFetchGeonamesFreeTextQuery,
   useFetchPlaceReverseLookupQuery,
+  type PlaceOption,
 } from "./api/geonames";
 import {
   useFetchCoordinateSystemsQuery,
   useLazyTransformCoordinatesQuery,
 } from "./api/maptiler";
-import {
-  useFetchCapabilitiesQuery,
-  useLazyFetchFeatureQuery,
-} from "./api/wms";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
-import Collapse from "@mui/material/Collapse";
-import PublicIcon from "@mui/icons-material/Public";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -73,9 +59,6 @@ import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-type AppDispatch = (action: any) => any;
-export type RootState = {geomap: SWHFormState};
-
 /**
  * Map field
  * Lookup base location/point via Geonames.
@@ -84,17 +67,12 @@ export type RootState = {geomap: SWHFormState};
  * Also allows user to select Geobasis standard.
  */
 
-const DrawMap = ({ useAppDispatch, useAppSelector }: {
-    useAppDispatch: () => AppDispatch;
-    useAppSelector: TypedUseSelectorHook<RootState>;
+const DrawMap = ({ setValue, value }: {
+    setValue: (v: ExtendedMapFeature[]) => void;
+    value: ExtendedMapFeature[];
 }) => {
-  const dispatch = useAppDispatch();
-  const fieldValue = useAppSelector(getField(field.name, groupName, groupIndex));
-  const status = getFieldStatus(fieldValue, field);
-
-  const [geonamesValue, setGeonamesValue] = useState<OptionsType>();
+  const [geonamesValue, setGeonamesValue] = useState<PlaceOption>();
   const [coordinateSystem, setCoordinateSystem] = useState<CoordinateSystem>();
-  const [openMap, setOpenMap] = useState<boolean>(false);
   const [viewState, setViewState] = useState<{
     longitude?: number;
     latitude?: number;
@@ -105,40 +83,23 @@ const DrawMap = ({ useAppDispatch, useAppSelector }: {
     latitude: 52.080738,
     zoom: 8,
   });
-  const [features, setFeatures] = useState<ExtendedMapFeature[]>(
-    field.value || [],
-  );
+  const [features, setLocalFeatures] = useState<ExtendedMapFeature[]>(value || []);
   const [getConvertedCoordinates] = useLazyTransformCoordinatesQuery();
-  const [hiddenLayers, setHiddenLayers] = useState<string[]>([]);
   const mapRef = useRef<MapRef>(null);
-  const [fetchWmsFeature] = useLazyFetchFeatureQuery();
-  // Probably cleaner to do move the draw mode state keeping here, and remove from DrawControls
-  // Need it here to disable/enable WMS feature click listener
-  const [activeDrawMode, setActiveDrawMode] = useState('');
 
   // write this to redux store with some debouncing for performance
   // separated from all the local state changes, as the global state would get changed a bit too often otherwise
   const debouncedSaveToStore = useDebouncedCallback(
-    () => {
-      dispatch(
-        setField({
-          field: field,
-          value: features,
-          ...(groupName !== undefined && { groupName: groupName }),
-          ...(groupIndex !== undefined && { groupIndex: groupIndex }),
-        }),
-      );
-    },
-    // delay in ms
+    () => setValue(features),
     800,
   );
 
   useEffect(() => {
     // on features change, write this to store with a debounce
-    if (features.length > 0 || (features.length === 0 && fieldValue.touched)) {
+    if (features.length > 0) {
       debouncedSaveToStore();
     }
-  }, [features, fieldValue.touched]);
+  }, [features]);
 
   const [selectedFeatures, setSelectedFeatures] = useState<
     (string | number | undefined)[]
@@ -164,9 +125,6 @@ const DrawMap = ({ useAppDispatch, useAppSelector }: {
         zoom: 10,
       });
 
-      // open the map
-      setOpenMap(true);
-
       // and add feature to map if not added yet, checks geonames id
       const newFeature: ExtendedMapFeature<Point> = {
         id: geonamesValue?.id,
@@ -183,7 +141,7 @@ const DrawMap = ({ useAppDispatch, useAppSelector }: {
           | number[][]
           | number[][][],
       };
-      setFeatures([
+      setLocalFeatures([
         ...new Map(
           [...features, newFeature].map((item) => [item.id, item]),
         ).values(),
@@ -218,7 +176,7 @@ const DrawMap = ({ useAppDispatch, useAppSelector }: {
           };
         }),
       );
-      setFeatures(updatedCoordinatesFeatures);
+      setLocalFeatures(updatedCoordinatesFeatures);
     };
     if (coordinateSystem) {
       console.log(coordinateSystem.bbox);
@@ -226,7 +184,7 @@ const DrawMap = ({ useAppDispatch, useAppSelector }: {
       // set bounding box of the selected coordinate system
       setViewState({ bounds: coordinateSystem.bbox as LngLatBoundsLike });
     } else {
-      setFeatures(
+      setLocalFeatures(
         features.map((f) => ({
           ...f,
           coordinateSystem: undefined,
@@ -237,234 +195,63 @@ const DrawMap = ({ useAppDispatch, useAppSelector }: {
   }, [coordinateSystem]);
 
   return (
-    <Card>
-      <CardHeader
-        title={field.label}
-        subheader={field.description}
-        titleTypographyProps={{ fontSize: 16 }}
-        subheaderTypographyProps={{ fontSize: 12 }}
-        sx={{ pb: 0, pl: 2.25, pr: 2.25 }}
-      />
-      <CardContent>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ flex: 1 }}
-          spacing={2}
-        >
-          <GeonamesApiField
-            value={geonamesValue}
-            setValue={setGeonamesValue}
-            disabled={formDisabled || field.disabled}
-            label={t("initialLocation")}
-          />
-          <FindCoordinateSystemField
-            value={coordinateSystem}
-            setValue={setCoordinateSystem}
-            disabled={formDisabled || field.disabled}
-            label={t("findCoordinateSystem")}
-          />
-          <StatusIcon status={status} title={t("drawExplanation")} />
-          <Button
-            sx={{ whiteSpace: "nowrap" }}
-            startIcon={<PublicIcon />}
-            onClick={() => setOpenMap(!openMap)}
+    <Box mb={2}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ flex: 1 }}
+        spacing={2}
+      >
+        <GeonamesApiField
+          value={geonamesValue}
+          setValue={setGeonamesValue}
+          label="Select a location"
+        />
+        <FindCoordinateSystemField
+          value={coordinateSystem}
+          setValue={setCoordinateSystem}
+          label="Select a coordinate system"
+        />
+      </Stack>
+        <Box pt={1} sx={{ width: "60rem", maxWidth: "90vw" }}>
+          <GLMap
+            {...viewState}
+            ref={mapRef}
+            onMove={(e) => setViewState(e.viewState)}
+            style={{
+              width: "100%",
+              height: 400,
+              borderRadius: "5px",
+              border: "1px solid rgba(0,0,0,0.23)",
+            }}
+            mapStyle={`https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`}
+            maxBounds={coordinateSystem?.bbox as LngLatBoundsLike}
           >
-            {t("toggleMap")}
-          </Button>
-        </Stack>
-        <Collapse unmountOnExit in={openMap}>
-          <Box pt={1}>
-            <GLMap
-              {...viewState}
-              ref={mapRef}
-              onMove={(e) => setViewState(e.viewState)}
-              style={{
-                width: "100%",
-                height: 400,
-                borderRadius: "5px",
-                border: "1px solid rgba(0,0,0,0.23)",
-              }}
-              mapStyle={`https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`}
-              maxBounds={coordinateSystem?.bbox as LngLatBoundsLike}
-              onClick={async (e) => {
-                /* 
-                Gets shape info for active WMS layers when clicked on. 
-                WMS service returns a GeoJSON object. Not further implemented yet. 
-                Needs some work too as ideally we only fetch this data when no drawing control is activated.
-                */
-                if (
-                  field.wmsLayers &&
-                  hiddenLayers.length !== field.wmsLayers.length &&
-                  activeDrawMode === 'simple_select'
-                ) {
-                  const map = mapRef.current!.getMap();
-                  const { width, height } = map
-                    .getContainer()
-                    .getBoundingClientRect();
-                  const { _sw, _ne } = map.getBounds();
-                  const activeLayers = field.wmsLayers.filter(
-                    (layer) => hiddenLayers.indexOf(layer.name) === -1,
-                  );
-                  // GeoJSON is in EPSG 4326, but we need 3857 for the map. Maybe use a converting lib like proj4?
-                  const { data } = (await getConvertedCoordinates({
-                    coordinates: `${_sw.lng},${_sw.lat};${_ne.lng},${_ne.lat}`,
-                    to: 3857,
-                    from: 4326,
-                  })) as { data: { x: number; y: number }[] };
-                  // Now we're ready to query the WMS service,
-                  // with the x/y pixel coords of the point we clicked (needs to be and Int),
-                  // the epsg 3857 bbox and the map pixel width and height.
-                  const wmsFeatureData = await Promise.all(
-                    activeLayers.map((layer) =>
-                      fetchWmsFeature({
-                        url: layer.source,
-                        layerName: layer.name,
-                        x: Math.round(e.point.x),
-                        y: Math.round(e.point.y),
-                        bbox: `${data[0].x},${data[0].y},${data[1].x},${data[1].y}`,
-                        width: width,
-                        height: height,
-                      }),
-                    ),
-                  );
-                  // Just log the result for now. We could draw the shape on the map, display a tooltip, do something in the legend, etc.
-                  // Needs some thinking, keep in mind we can have multiple active layers.
-                  console.log(wmsFeatureData);
-                }
-              }}
-            >
-              <NavigationControl position="top-left" />
-              <ScaleControl />
-              <DrawControls
-                features={features}
-                setFeatures={setFeatures}
-                setSelectedFeatures={setSelectedFeatures}
-                coordinateSystem={coordinateSystem}
-                setActiveDrawMode={setActiveDrawMode}
-              />
-              <WMSLayers field={field} hiddenLayers={hiddenLayers} />
-            </GLMap>
-            {field.wmsLayers && (
-              <Box
-                sx={{
-                  mt: 1,
-                  border: "1px solid rgba(224, 224, 224, 1)",
-                  p: 2,
-                  borderRadius: 1,
-                }}
-              >
-                <Typography variant="h6">{t("layers")}</Typography>
-                <Stack direction="row" spacing={4}>
-                  {field.wmsLayers.map((layer) => (
-                    <WMSLegend
-                      layer={layer}
-                      key={layer.name}
-                      toggleLayer={() =>
-                        setHiddenLayers(
-                          hiddenLayers.includes(layer.name) ?
-                            hiddenLayers.filter((item) => item !== layer.name)
-                          : [...hiddenLayers, layer.name],
-                        )
-                      }
-                      isActive={hiddenLayers.indexOf(layer.name) === -1}
-                    />
-                  ))}
-                </Stack>
-              </Box>
-            )}
-            {features.length > 0 && (
-              // let's user edit features coordinates directly
-              <FeatureTable
-                features={features}
-                setFeatures={setFeatures}
-                selectedFeatures={selectedFeatures}
-                coordinateSystem={coordinateSystem}
-              />
-            )}
-          </Box>
-        </Collapse>
-      </CardContent>
-    </Card>
+            {/* <NavigationControl position="top-left" />
+            <ScaleControl /> */}
+            <DrawControls
+              features={features}
+              setFeatures={setLocalFeatures}
+              setSelectedFeatures={setSelectedFeatures}
+              coordinateSystem={coordinateSystem}
+            />
+          </GLMap>
+          {features.length > 0 && (
+            // let's user edit features coordinates directly
+            <FeatureTable
+              features={features}
+              setFeatures={setLocalFeatures}
+              selectedFeatures={selectedFeatures}
+              coordinateSystem={coordinateSystem}
+            />
+          )}
+        </Box>
+      </Box>
   );
 };
 
 export default DrawMap;
-
-/* Draws WMS image tiles on the map */
-const WMSLayers = ({
-  field,
-  hiddenLayers,
-}: {
-  field: DrawMapFieldType;
-  hiddenLayers: string[];
-}) => {
-  const map = useMap();
-  const { width, height } = map.current!.getContainer().getBoundingClientRect();
-
-  return (
-    <>
-      {field.wmsLayers?.map(
-        (layer) =>
-          hiddenLayers.indexOf(layer.name) === -1 && [
-            <Source
-              key="source"
-              id={`${layer.name}-wms`}
-              type="raster"
-              tiles={[
-                `${layer.source}&request=GetMap&format=image%2Fpng&styles=&transparent=true&dpi=135&map_resolution=135&format_options=dpi%3A256&width=${width}&height=${height}&crs=EPSG%3A3857&BBOX={bbox-epsg-3857}`,
-              ]}
-            />,
-            <Layer
-              key="layer"
-              id={`${layer.name}-layer`}
-              type="raster"
-              source={`${layer.name}-wms`}
-              paint={{
-                "raster-opacity": 0.4,
-              }}
-            />,
-          ],
-      )}
-    </>
-  );
-};
-
-const WMSLegend = ({
-  layer,
-  toggleLayer,
-  isActive,
-}: {
-  layer: any;
-  toggleLayer: () => void;
-  isActive: boolean;
-}) => {
-  const { data } = useFetchCapabilitiesQuery(layer.source);
-  const images =
-    (data &&
-      (Array.isArray(data?.Capability.Layer.Layer.Style) ?
-        data.Capability.Layer.Layer.Style
-      : [data.Capability.Layer.Layer.Style])) ||
-    undefined;
-  return (
-    <Box>
-      <FormControlLabel
-        control={
-          <Switch onClick={toggleLayer} checked={isActive} size="small" />
-        }
-        label={data && data.Capability.Layer.Layer.Title}
-        sx={{ mb: 1 }}
-      />
-      {images &&
-        images.map((img: any, i: number) => (
-          <Box key={i}>
-            <img src={img.LegendURL.OnlineResource["@_xlink:href"]} />
-          </Box>
-        ))}
-    </Box>
-  );
-};
 
 interface Column {
   id: string;
@@ -481,28 +268,28 @@ const FeatureTable = ({
   features: ExtendedMapFeature[];
   setFeatures: Dispatch<SetStateAction<ExtendedMapFeature[]>>;
   selectedFeatures: (string | number | undefined)[];
-  coordinateSystem?: OptionsType;
+  coordinateSystem?: CoordinateSystem;
 }) => {
   const [getConvertedCoordinates] = useLazyTransformCoordinatesQuery();
 
   const columns: readonly Column[] = [
-    { id: "feature", label: "featureType", width: 50 },
+    { id: "feature", width: 25 },
     {
       id: "coordinates",
-      label: "featureCoordinates",
+      label: "Coordinates",
       width: coordinateSystem === undefined ? 500 : 300,
     },
     ...(coordinateSystem ?
       [
         {
           id: "transposedCoordinates",
-          label: `transposedCoordinates ${coordinateSystem.id}`,
+          label: `Transposed in ${coordinateSystem.id}`,
           width: 300,
         },
       ]
     : []),
-    { id: "geonames", label: "featureGeonameRef" },
-    { id: "delete", label: "delete", width: 50 },
+    { id: "geonames", label: "Geonames" },
+    { id: "delete", width: 25 },
   ];
 
   const setCoordinates = async ({
@@ -722,7 +509,7 @@ const FeatureTable = ({
               <TableCell>
                 <IconButton
                   color="error"
-                  aria-label={t("delete") as string}
+                  aria-label="Delete"
                   size="small"
                   onClick={() => deleteFeature(i)}
                 >
@@ -853,6 +640,13 @@ const controls = [
   "draw_polygon",
 ];
 
+const controlLabels: Record<typeof controls[number], string> = {
+  simple_select: "Select",
+  draw_point: "Point",
+  draw_line_string: "Line",
+  draw_polygon: "Polygon",
+}
+
 type FeaturesEvent = { features: ExtendedMapFeature[]; action?: string };
 
 const DrawControls = ({
@@ -860,7 +654,6 @@ const DrawControls = ({
   setFeatures,
   setSelectedFeatures,
   coordinateSystem,
-  setActiveDrawMode,
 }: {
   features: ExtendedMapFeature[];
   setFeatures: Dispatch<SetStateAction<ExtendedMapFeature[]>>;
@@ -868,7 +661,6 @@ const DrawControls = ({
     SetStateAction<(string | number | undefined)[]>
   >;
   coordinateSystem?: OptionsType;
-  setActiveDrawMode: Dispatch<SetStateAction<string>>;
 }) => {
   const [selectedMode, setSelectedMode] = useState(controls[0]);
   const [updatedFeatures, setUpdatedFeatures] =
@@ -886,8 +678,6 @@ const DrawControls = ({
     setUpdatedFeatures(updatedFeatures);
     setSelectedMode(controls[0]);
   }, []);
-
-  useEffect(() => { setActiveDrawMode(selectedMode) }, [selectedMode])
 
   useEffect(() => {
     // Have to pull this out of the useCallback function onUpdate, otherwise no access to current coordinate system
@@ -984,7 +774,7 @@ const DrawControls = ({
                   <PentagonIcon />
                 : null}
               </ListItemIcon>
-              <ListItemText primary={t(control)} />
+              <ListItemText primary={controlLabels[control]} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -1009,7 +799,7 @@ const DrawControls = ({
             <ListItemIcon sx={{ minWidth: 40 }}>
               <DeleteIcon />
             </ListItemIcon>
-            <ListItemText primary={"delete"} />
+            <ListItemText primary="Delete" />
           </ListItemButton>
         </ListItem>
       </List>
@@ -1119,11 +909,10 @@ const ReverseLookupGeonamesField = ({
   // fetch on open, not directly on prop change
   const [open, setOpen] = useState(false);
   // Fetch data right away, based on coordinates
-  const { data, isFetching, isLoading } =
-    useFetchPlaceReverseLookupQuery<QueryReturnType>(
-      { lat: lat, lng: lng },
-      { skip: !open },
-    );
+  const { data, isFetching, isLoading } = useFetchPlaceReverseLookupQuery<any>(
+    { lat: lat, lng: lng },
+    { skip: !open },
+  );
 
   return (
     <Autocomplete
@@ -1138,7 +927,7 @@ const ReverseLookupGeonamesField = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label={t("findPlace")}
+          label="Find place"
           size="small"
           error={!value}
         />
@@ -1151,7 +940,7 @@ const ReverseLookupGeonamesField = ({
         e && e.type === "change" && setInputValue(newValue);
         e && (e.type === "click" || e.type === "blur") && setInputValue("");
       }}
-      noOptionsText={t("noResults")}
+      noOptionsText="No results found"
       loading={isLoading || isFetching}
       loadingText={
         <Stack direction="row" justifyContent="space-between" alignItems="end">
@@ -1183,7 +972,7 @@ const GeonamesApiField = ({
   const debouncedInputValue = useDebounce(inputValue, 500)[0];
   // Fetch data on input change
   const { data, isFetching, isLoading } =
-    useFetchGeonamesFreeTextQuery<QueryReturnType>(debouncedInputValue, {
+    useFetchGeonamesFreeTextQuery(debouncedInputValue, {
       skip: debouncedInputValue === "",
     });
 
@@ -1200,7 +989,6 @@ const GeonamesApiField = ({
       isLoading={isLoading}
       isFetching={isFetching}
       width={width}
-      api="geonames"
     />
   );
 };
@@ -1221,9 +1009,7 @@ const FindCoordinateSystemField = ({
   const [inputValue, setInputValue] = useState<string>("");
   const debouncedInputValue = useDebounce(inputValue, 500)[0];
   // Fetch data on input change
-  const { data, isFetching, isLoading } = useFetchCoordinateSystemsQuery<
-    QueryReturnType<CoordinateSystem>
-  >(debouncedInputValue, {
+  const { data, isFetching, isLoading } = useFetchCoordinateSystemsQuery(debouncedInputValue, {
     skip: debouncedInputValue === "",
   });
 
@@ -1240,7 +1026,6 @@ const FindCoordinateSystemField = ({
       isLoading={isLoading}
       isFetching={isFetching}
       width={width}
-      api="maptiler"
     />
   );
 };
@@ -1257,7 +1042,6 @@ const TypeaheadField = ({
   isLoading,
   isFetching,
   width,
-  api,
 }: {
   value?: OptionsType | CoordinateSystem;
   setValue: (v: OptionsType | CoordinateSystem) => void;
@@ -1270,7 +1054,6 @@ const TypeaheadField = ({
   data: any;
   isLoading: boolean;
   isFetching: boolean;
-  api: string;
 }) => {
   return (
     <Autocomplete

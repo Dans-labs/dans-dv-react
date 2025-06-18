@@ -3,20 +3,19 @@
   "main": "lib/index.tsx",
   "version": "1.0.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./lib/index.js"
-    }
-  },
   "description": "",
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@dans-dv/layout": "workspace:*",
+    "@dans-dv/submit": "workspace:*",
     "@dans-dv/wrapper": "workspace:*",
     "@mapbox/mapbox-gl-draw": "^1.5.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",
+    "fast-xml-parser": "^5.2.5",
+    "maplibre-gl": "^5.6.0",
     "react": "^19.1.0",
     "react-map-gl": "^8.0.4",
     "use-debounce": "^10.0.5"
@@ -25,6 +24,7 @@
     "@types/geojson": "^7946.0.16",
     "@types/mapbox__mapbox-gl-draw": "^1.4.9",
     "@types/react": "^19.1.0",
+    "@types/react-map-gl": "^6.1.7",
     "geojson": "^0.5.0",
     "react-redux": "^9.2.0"
   }

@@ -4,14 +4,10 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./lib/index.js"
-    }
-  },
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@dans-dv/geomap": "workspace:*",
     "@dans-dv/submit": "workspace:*",
     "@dans-dv/swh-registration": "workspace:*",
     "@dans-dv/file-upload": "workspace:*",

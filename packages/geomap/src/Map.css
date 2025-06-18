@@ -11,3 +11,7 @@
 .mouse-move .maplibregl-canvas-container.maplibregl-interactive {
   cursor: move;
 }
+
+.maplibregl-control-container {
+  display: none !important;
+}

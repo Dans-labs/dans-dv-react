@@ -7,7 +7,7 @@ import { useFetchGeonamesFreeTextQuery } from "./api/geonames";
 import { useFetchWikidataQuery } from "./api/wikidata";
 import { AutocompleteAPIField } from "@dans-dv/inputs";
 import Box from "@mui/material/Box";
-import { TabHeader, SubHeader } from "@dans-dv/layout";
+import { TabHeader, SubHeader, BoxWrap } from "@dans-dv/layout";
 import { Submit, useSubmitDataMutation } from "@dans-dv/submit";
 import { useApiToken } from "@dans-dv/wrapper";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
@@ -44,7 +44,7 @@ export function KeywordFields({ config, useAppDispatch, useAppSelector }: {
   };
 
   return (
-    <Box>
+    <BoxWrap>
       <TabHeader
         title="Keywords"
         subtitle="Add keywords from different sources to your dataset. Keywords can be used to find datasets in the Dataverse search engine."
@@ -81,7 +81,7 @@ export function KeywordFields({ config, useAppDispatch, useAppSelector }: {
         onClick={() => submitData({ data: keywords, doi: doi, apiToken: apiToken })}
       />
 
-    </Box>
+    </BoxWrap>
   );
 };
 

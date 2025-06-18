@@ -1,50 +1,52 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./";
+import type { Feature, Point, Polygon, LineString, Geometry } from "geojson";
 
-export type Keyword = {
+export type OptionsType = {
   label: string;
   value: string;
-}
-
-export type KeywordsFormState = {
-  wikidata: Keyword[];
-  gettyAat: Keyword[];
-  geonames: Keyword[];
-  elsst: Keyword[];
-  narcis: Keyword[];
-  dansCollections: Keyword[];
 };
 
-export type KeywordSource = keyof KeywordsFormState;
+export type MapFeatureType = Point | Polygon | LineString;
+export interface ExtendedMapFeature<G extends Geometry = Geometry, P = any> extends Feature<G, P> {
+  geonames?: OptionsType | undefined;
+  originalCoordinates?: number[] | number[][] | number[][][];
+  coordinateSystem?: CoordinateSystem;
+};
 
-const initialState: KeywordsFormState = {
-  wikidata: [],
-  gettyAat: [],
-  geonames: [],
-  elsst: [],
-  narcis: [],
-  dansCollections: [],
+export interface CoordinateSystem extends OptionsType {
+  id?: string;
+  bbox?: any;
+};
+
+export type GeomapState = {
+  value: ExtendedMapFeature[];
+  wmsLayers: {
+    name: string;
+    source: string;
+  }[];
+};
+
+const initialState: GeomapState = {
+  value: [],
+  wmsLayers: [],
 };
 
 export const geomapSlice = createSlice({
   name: "geomap",
   initialState,
   reducers: {
-    setField<K extends keyof KeywordsFormState>(
-      state: KeywordsFormState,
-      action: PayloadAction<{ field: K; value: KeywordsFormState[K] }>
+    setFeatures(
+      state: GeomapState,
+      action: PayloadAction<ExtendedMapFeature[]>
     ) {
-      const { field, value } = action.payload;
-      state[field] = value;
-    },
+      state.value = action.payload;
+    }
   },
 });
 
-export const { setField } = geomapSlice.actions;
+export const { setFeatures } = geomapSlice.actions;
 
-export const getField = <K extends keyof KeywordsFormState>(field: K) =>
-  (state: RootState) => state.keywords[field];
-
-export const getFields = () => (state: RootState) => state.keywords;
+export const getFeatures = () => (state: RootState) => state.geomap.value;
 
 export default geomapSlice.reducer;

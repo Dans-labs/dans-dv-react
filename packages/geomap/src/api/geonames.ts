@@ -15,6 +15,13 @@ type GeonamesResponse = {
   ocean?: GeonamesItem;
 }
 
+export type PlaceOption = {
+  label: string;
+  value: string;
+  coordinates?: [number, number]; // Only present for geonames
+  id?: string;
+};
+
 export const geonamesApi = createApi({
   reducerPath: "geonames",
   baseQuery: fetchBaseQuery({ baseUrl: "https://secure.geonames.org/" }),

@@ -9,7 +9,11 @@ function App() {
         wikidata: true,
         gettyAat: true,
         elsst: true,
-      }
+      },
+      geo: {
+        geonames: true,
+        map: true,
+      },
     }} />
   )
 }

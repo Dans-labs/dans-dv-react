@@ -2,17 +2,17 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./";
 
 export type SWHFormState = {
-  url: string;
-  author: string[];
-  name: string;
-  description: string;
+  repository_url: string;
+  software_author: string[];
+  software_name: string;
+  software_description: string;
 };
 
 const initialState: SWHFormState = {
-  url: '',
-  author: [],
-  name: '',
-  description: '',
+  repository_url: '',
+  software_author: [],
+  software_name: '',
+  software_description: '',
 };
 
 export const swhSlice = createSlice({
@@ -41,9 +41,9 @@ export const swhSlice = createSlice({
     },
     resetValues(state: SWHFormState) {
       // resets all fields except for url
-      state.author = [];
-      state.name = '';
-      state.description = '';
+      state.software_author = [];
+      state.software_name = '';
+      state.software_description = '';
     },
   },
 });
