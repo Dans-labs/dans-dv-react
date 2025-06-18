@@ -25,7 +25,7 @@ export function SubHeader({
   return (
     <>
         <Typography variant="h6">{title}</Typography>
-        <Typography variant="body2" mb={2}>{subtitle}</Typography>
+        <Typography variant="body2" mb={1}>{subtitle}</Typography>
     </>
   );
 }

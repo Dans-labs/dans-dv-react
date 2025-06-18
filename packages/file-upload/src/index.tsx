@@ -42,7 +42,6 @@ export default function Files(props: ReduxProps) {
             id: doi,
           }).then(() => dispatch(queueFiles()))
         } 
-        sx={{ mt: 2 }}
         disabled={selectedFiles.length === 0 || selectedFiles.some((file) => file.status === "queued" || submitLoading)}
       >
         Upload

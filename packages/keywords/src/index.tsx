@@ -98,7 +98,7 @@ function WikidataField({ onSave, value }: {
     });
 
   return (
-    <Box mb={4}>
+    <Box mb={2}>
       <SubHeader 
         title="Wikidata"
         subtitle="Wikidata acts as a central storage for the structured data of Wikimedia projects like Wikipedia, Wikivoyage, Wiktionary."
@@ -132,7 +132,7 @@ function GeonamesField({ onSave, value }: {
     });
 
   return (
-    <Box mb={4}>
+    <Box mb={2}>
       <SubHeader 
         title="Geonames"
         subtitle=""
@@ -177,7 +177,7 @@ function DatastationsField({ type, onSave, value }: {
     "";
 
   return (
-    <Box mb={4}>
+    <Box mb={2}>
       <SubHeader 
         title={label}
         subtitle={
