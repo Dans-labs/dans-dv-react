@@ -84,6 +84,7 @@ export default function Form({ useAppDispatch, useAppSelector }: {
 
   // format data and submit to the API
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    // Temp fix for repository_url having to be being an object
     const formattedData = {...data, repository_url: { value: data.repository_url }};
     submitData({
       data: formattedData,
