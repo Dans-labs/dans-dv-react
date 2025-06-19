@@ -8,6 +8,7 @@ import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import CssBaseline from '@mui/material/CssBaseline';
 import { ApiTokenProvider } from './apiTokenContext';
+import { ShadowRootContext } from './shadowRootContext';
 
 export function createApp({ app, appendToId, theme }: { app: ReactNode; appendToId: string; theme?: Partial<Theme> }) {
   const targetElement = document.querySelector(`#${appendToId}`);
@@ -40,10 +41,12 @@ export function createApp({ app, appendToId, theme }: { app: ReactNode; appendTo
     <StrictMode>
       <CacheProvider value={cache}>
         <ThemeProvider theme={customTheme}>
-          <ApiTokenProvider>
-            <CssBaseline />
-            {app}
-          </ApiTokenProvider>
+          <ShadowRootContext.Provider value={shadowContainer}>
+            <ApiTokenProvider>
+              <CssBaseline />
+              {app}
+            </ApiTokenProvider>
+          </ShadowRootContext.Provider>
         </ThemeProvider>
       </CacheProvider>
     </StrictMode>

@@ -1,5 +1,5 @@
 // apiTokenContext.tsx
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from 'react';
 
 interface ApiTokenContextValue {
   apiToken: string | null;
@@ -17,7 +17,7 @@ const ApiTokenContext = createContext<ApiTokenContextValue>({
 
 export const useApiToken = () => useContext(ApiTokenContext);
 
-export const ApiTokenProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ApiTokenProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [apiToken, setApiToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

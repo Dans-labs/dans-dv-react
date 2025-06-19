@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./";
 import type { Feature, Point, Polygon, LineString, Geometry } from "geojson";
+import type { LngLatBoundsLike } from "react-map-gl/maplibre";
 
 export type OptionsType = {
   label: string;
@@ -16,7 +17,7 @@ export interface ExtendedMapFeature<G extends Geometry = Geometry, P = any> exte
 
 export interface CoordinateSystem extends OptionsType {
   id?: string;
-  bbox?: any;
+  bbox?: LngLatBoundsLike;
 };
 
 export type GeomapState = {

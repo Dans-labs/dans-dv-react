@@ -10,21 +10,22 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-
+import { useInjectGlobalStyle } from '@dans-dv/wrapper';
 import { type CoordinateSystem, type ExtendedMapFeature, type OptionsType } from "./slice";
 
 import GLMap, {
-  // ScaleControl,
-  // NavigationControl,
+  ScaleControl,
+  NavigationControl,
   useControl,
   type LngLatBoundsLike,
   type MapRef,
 } from "react-map-gl/maplibre";
 
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-// import "maplibre-gl/dist/maplibre-gl.css";
-import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import "./Map.css";
+import mapLibreCss from "maplibre-gl/dist/maplibre-gl.css?inline";
+import mapboxDrawCss from "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css?inline";
+import mapCss from "./Map.css?inline";
+import { styles } from './mapstyles';
 import type { Point, Polygon, LineString } from "geojson";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -71,6 +72,11 @@ const DrawMap = ({ setValue, value }: {
     setValue: (v: ExtendedMapFeature[]) => void;
     value: ExtendedMapFeature[];
 }) => {
+  useInjectGlobalStyle([
+    { id: 'maplibre', cssText: mapLibreCss },
+    { id: 'custommap', cssText: mapCss },
+    { id: 'mapdraw', cssText: mapboxDrawCss },
+  ]);
   const [geonamesValue, setGeonamesValue] = useState<PlaceOption>();
   const [coordinateSystem, setCoordinateSystem] = useState<CoordinateSystem>();
   const [viewState, setViewState] = useState<{
@@ -228,8 +234,8 @@ const DrawMap = ({ setValue, value }: {
             mapStyle={`https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json`}
             maxBounds={coordinateSystem?.bbox as LngLatBoundsLike}
           >
-            {/* <NavigationControl position="top-left" />
-            <ScaleControl /> */}
+            <NavigationControl position="top-left" />
+            <ScaleControl />
             <DrawControls
               features={features}
               setFeatures={setLocalFeatures}
@@ -841,6 +847,7 @@ const DrawControl = ({
         defaultMode: mode,
         keybindings: true,
         clickBuffer: 5,
+        styles: styles,
       }),
     ({ map }: { map: any }) => {
       map.on("draw.create", onCreate);
