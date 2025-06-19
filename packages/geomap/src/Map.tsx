@@ -610,7 +610,7 @@ const CoordinateGroup = ({
   coordinateSystem?: OptionsType;
 }) => {
   return (
-    <Stack spacing={1} direction="row" mb={1}>
+    <Stack spacing={1} direction="row">
       {coordinates?.map((coord, coordinateIndex) => (
         <TextField
           disabled={disabled}
