@@ -43,7 +43,7 @@ export default function GeoData({ config, useAppDispatch, useAppSelector }: {
         isLoading={isLoading}
         isError={isError}
         isSuccess={isSuccess}
-        onClick={() => submitData({ data: value, doi: doi, apiToken: apiToken })}
+        onClick={() => submitData({ data: value, id: doi, apiToken: apiToken })}
       />
 
     </BoxWrap>

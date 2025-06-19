@@ -78,7 +78,7 @@ export function KeywordFields({ config, useAppDispatch, useAppSelector }: {
         isError={submitError} 
         isSuccess={submitSuccess} 
         error={submitErrorMessage as FetchBaseQueryError}
-        onClick={() => submitData({ data: keywords, doi: doi, apiToken: apiToken })}
+        onClick={() => submitData({ data: { keyword_management: keywords }, id: doi, apiToken: apiToken })}
       />
 
     </BoxWrap>
