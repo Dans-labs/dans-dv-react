@@ -113,7 +113,7 @@ export const uploadFile = async (file: SelectedFile, dispatch: any, apiToken: st
         const response = await fetch(
           `${
             import.meta.env.VITE_PACKAGING_TARGET
-          }/inbox/files/${doi}/${tusId}`,
+          }/inbox/files/${encodeURIComponent(doi)}/${tusId}`,
           {
             method: "PATCH",
             headers: {
