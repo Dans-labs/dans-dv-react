@@ -98,6 +98,9 @@ export const maptilerApi = createApi({
                       label: `${item.name} (${item.id.authority} ${item.id.code})`,
                       value: item.id.code,
                       id: `${item.id.authority}-${item.id.code}`,
+                      url: item.id.authority === "EPSG" ?
+                        `https://epsg.io/${item.id.code}` 
+                        : undefined,
                       // add a bit of space around the bounding box, for features right on the border
                       bbox: [
                         [item.bbox[0] - 0.2, item.bbox[1] - 0.2],

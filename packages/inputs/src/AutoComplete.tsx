@@ -17,6 +17,7 @@ type Value = {
   extraContent?: string;
   idLabel?: string;
   id?: string;
+  url?: string;
 };
 
 export function AutocompleteAPIField({
@@ -78,7 +79,7 @@ export function AutocompleteAPIField({
             <InfoChip option={option} key={index} getItemProps={getItemProps} index={index} />
           ));
         }
-        return (value as Value).value ? <InfoLink link={(value as Value).value} /> : null;
+        return (value as Value).value ? <InfoLink link={(value as Value).url || (value as Value).value} /> : null;
       }}
       onChange={(_e, newValue) => onSave(newValue as any)}
       onInputChange={(e, newValue) => {
