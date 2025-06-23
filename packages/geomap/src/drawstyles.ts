@@ -12,7 +12,7 @@ export const styles = [
         "paint": {
           "line-color": "#D20C0C",
           "line-dasharray": [0.2, 2],
-          "line-width": 2
+          "line-width": 1
         }
     },
     // polygon fill
@@ -51,7 +51,7 @@ export const styles = [
       "paint": {
         "line-color": "#D20C0C",
         "line-dasharray": [0.2, 2],
-        "line-width": 2
+        "line-width": 1
       }
     },
     // vertex point halos

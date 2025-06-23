@@ -12,13 +12,21 @@ export type ReduxProps = {
   useAppDispatch: AppDispatch;
   useAppSelector: AppSelector;
 }
+export type DrawConfig = {
+  point?: boolean;
+  line?: boolean;
+  polygon?: boolean;
+  rectangle?: boolean;
+}
 
 export default function GeoData({ config, useAppDispatch, useAppSelector }: {
   useAppDispatch: () => AppDispatch;
   useAppSelector: TypedUseSelectorHook<RootState>;
   config: {
     geonames?: boolean;
-    map?: boolean;
+    map?: {
+      draw?: DrawConfig;
+    };
   }
 }) {
   const [ submitData, { isLoading, isSuccess, isError } ] = useSubmitDataMutation();
@@ -36,7 +44,7 @@ export default function GeoData({ config, useAppDispatch, useAppSelector }: {
         title="Geospatial data"
         subtitle="Some explanation on how to use this tool."
       />
-      { config.map && <DrawMap setValue={setFeaturesValue} value={value} /> }
+      { config.map && <DrawMap setValue={setFeaturesValue} value={value} draw={config.map.draw} /> }
 
       <Submit 
         disabled={value.length === 0 || isLoading}

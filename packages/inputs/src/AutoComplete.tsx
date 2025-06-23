@@ -29,7 +29,8 @@ export function AutocompleteAPIField({
   multiSelect,
   label,
   onSave,
-  value
+  value,
+  disabled,
 }: {
   inputValue: string;
   setInputValue: (value: string) => void;
@@ -41,6 +42,7 @@ export function AutocompleteAPIField({
   label?: string;
   onSave: (data: Value[]) => void;
   value: Value | Value[];
+  disabled?: boolean;
 }) {  
   console.log
   return (
@@ -159,6 +161,7 @@ export function AutocompleteAPIField({
         * For autoSelect, we could remove most of the filterOptions logic and the extra check in onChange.
         */
       clearOnBlur
+      disabled={disabled}
     />
   );
 };

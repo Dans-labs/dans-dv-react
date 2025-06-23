@@ -1,3 +1,4 @@
+.mode-draw_rectangle .maplibregl-canvas-container.maplibregl-interactive,
 .mode-draw_polygon .maplibregl-canvas-container.maplibregl-interactive,
 .mode-draw_point .maplibregl-canvas-container.maplibregl-interactive,
 .mode-draw_line_string .maplibregl-canvas-container.maplibregl-interactive {

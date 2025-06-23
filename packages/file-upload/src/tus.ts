@@ -52,14 +52,18 @@ export const uploadFile = async (file: SelectedFile, dispatch: any, apiToken: st
     // optional metadata for the file
     metadata: {
       fileName: file.name,
+      datasetId: doi,
     },
     headers: {
       "auth-env-name": import.meta.env.VITE_ENV_NAME,
       "assistant-config-name": import.meta.env.VITE_CONFIG_NAME,
-      "targets-credentials": JSON.stringify({
-        dataverse_api_key: apiToken,
-        doi: doi,
-      }),
+      "targets-credentials": JSON.stringify([{
+        "target-repo-name": location.hostname,
+        credentials: {
+          username: "API_KEY",
+          password: apiToken,
+        },
+      }]),
     },
     removeFingerprintOnSuccess: true,
     onError: (error) => {

@@ -12,7 +12,14 @@ function App() {
       },
       geo: {
         geonames: true,
-        map: true,
+        map: {
+          draw: {
+            point: true,
+            line: false,
+            polygon: false,
+            rectangle: true,
+          },
+        },
       },
     }} />
   )

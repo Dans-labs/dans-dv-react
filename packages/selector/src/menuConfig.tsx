@@ -34,7 +34,14 @@ export type MenuConfig = {
   };
   geo?: {
     geonames?: boolean;
-    map?: boolean;
+    map?: {
+      draw?: {
+        point?: boolean;
+        line?: boolean;
+        polygon?: boolean;
+        rectangle?: boolean;
+      };
+    };
   };
 };
 
