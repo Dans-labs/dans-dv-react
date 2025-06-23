@@ -113,16 +113,19 @@ export const uploadFile = async (file: SelectedFile, dispatch: any, apiToken: st
         const response = await fetch(
           `${
             import.meta.env.VITE_PACKAGING_TARGET
-          }/inbox/files/${tusId}`,
+          }/inbox/files/${doi}/${tusId}`,
           {
             method: "PATCH",
             headers: {
               "auth-env-name": import.meta.env.VITE_ENV_NAME,
               "assistant-config-name": import.meta.env.VITE_CONFIG_NAME,
-              "targets-credentials": JSON.stringify({
-                dataverse_api_key: apiToken,
-                doi: doi,
-              }),
+              "targets-credentials": JSON.stringify([{
+                "target-repo-name": location.hostname,
+                credentials: {
+                  username: "API_KEY",
+                  password: apiToken,
+                },
+              }]),
             },
           },
         );
