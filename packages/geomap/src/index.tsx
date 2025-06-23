@@ -1,3 +1,5 @@
+/// <reference path="./types/index.ts" />
+
 import type { TypedUseSelectorHook } from "react-redux";
 import { useApiToken } from "@dans-dv/wrapper";
 import { TabHeader, BoxWrap } from "@dans-dv/layout";
