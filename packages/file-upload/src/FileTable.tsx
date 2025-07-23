@@ -18,10 +18,12 @@ import { fileProcessing, fileRoles } from "./utils/fileOptions";
 import LinearProgress from "@mui/material/LinearProgress";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import { useFetchGroupedListQuery } from "./api/dansFormats";
 import type { ReduxProps, AppDispatch } from "./";
 import type { SelectedFile } from "./FileUpload";
 import { findFileGroup } from "./utils/fileHelpers";
+import Typography from "@mui/material/Typography";
 
 const FileTable = ({ useAppDispatch, useAppSelector }: ReduxProps) => {
   const selectedFiles = useAppSelector<SelectedFile[]>(getFiles);
@@ -175,38 +177,59 @@ const FileTableRow = ({ file, useAppDispatch }: {file: SelectedFile; useAppDispa
           <FileActionOptions type="process" file={file} useAppDispatch={useAppDispatch} />
         </TableCell>
       </TableRow>
-      <TableRow>
-        <UploadProgress file={file} key={`progress-${file.name}`} />
-      </TableRow>
+      {file.status && 
+        <TableRow>
+          <UploadProgress file={file} key={`progress-${file.name}`} />
+        </TableRow>
+      }
     </>
   );
 };
 
 const UploadProgress = ({ file }: { file: SelectedFile }) => {
+  console.log("UploadProgress", file);
   return (
     <TableCell
-      sx={{
-        p: 0,
-        border: 0,
-      }}
       colSpan={6}
     >
       <Box sx={{ width: "100%" }}>
         {file.status &&
-          <LinearProgress
-            variant="determinate"
-            value={file?.progress || 0}
-            color={
-              file?.status === "success" 
-              ? "success"
-              : file?.status === "error" 
-              ? "error"
-              : file?.status === "queued" 
-              ? "primary"
-              : undefined
-            }
-          />
+          <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
+            <Typography variant="body2" color="textSecondary" sx={{ whiteSpace: 'nowrap', fontSize: '0.75rem', textAlign: 'right', width: 200 }}>
+              {file.status === 'submitting' && `${file?.progress || 0}% uploaded`}
+              {file.status === 'error' && `Error uploading, please retry`}
+              {file.status === 'success' && `Upload complete`}
+              {file.status === 'queued' && `Waiting to upload`}
+            </Typography>
+            <LinearProgress
+              sx={{ width: "100%", borderRadius: 1 }}
+              variant="determinate"
+              value={file?.progress || 0}
+              color={
+                file?.status === "success" 
+                ? "success"
+                : file?.status === "error" 
+                ? "error"
+                : file?.status === "queued" 
+                ? "primary"
+                : undefined
+              }
+            />
+          </Stack>
         }
+        {file.process && file.process.length > 0 && file.process.map(process => (
+          <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
+            <Typography variant="body2" color="textSecondary" sx={{ whiteSpace: 'nowrap', fontSize: '0.75rem', textAlign: 'right', width: 200 }}>
+              {process.label}
+            </Typography>
+            <LinearProgress
+              sx={{ width: "100%", borderRadius: 1 }}
+              variant="determinate"
+              value={0}
+              color="secondary"
+            />              
+          </Stack>
+        ))}
       </Box>
     </TableCell>
   );
