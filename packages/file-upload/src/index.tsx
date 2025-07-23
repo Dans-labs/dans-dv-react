@@ -8,6 +8,14 @@ import { uploadFile } from "./tus";
 import { useApiToken } from "@dans-dv/wrapper";
 import { TabHeader, BoxWrap } from "@dans-dv/layout";
 import { useSubmitDataMutation } from "@dans-dv/submit";
+import Typography from "@mui/material/Typography";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import AudiotrackIcon from '@mui/icons-material/Audiotrack';
+import ImageIcon from '@mui/icons-material/Image';
 
 export type RootState = {files: SelectedFile[]};
 export type AppDispatch = () => (action: any) => any;
@@ -28,6 +36,19 @@ export default function Files(props: ReduxProps) {
       <TabHeader
         title="Upload and process files"
         subtitle="Add (very large) files to your dataset, add additional metadata per file, and select processing options."
+      />
+      <Feature
+        title="Currently supported processing options"
+        items={[
+          { 
+            title: "Automatically create an AI generated transcription in txt format.",
+            files: ["video", "audio"],
+          },
+          { 
+            title: "Generate thumbnails",
+            files: ["video", "images"],
+          },
+        ]}
       />
       <FileUpload {...props} />
       <FileTable {...props} />
@@ -76,3 +97,31 @@ function FileUploader({useAppSelector, useAppDispatch}: ReduxProps) {
 
   return null;
 };
+
+function Feature({ title, items }: { title: string; items: { title: string; files: string[] }[] }) {
+  return (
+    <>
+      <Typography variant="h6" sx={{ fontSize: "1rem" }}>
+        {title}
+      </Typography>
+      <List dense={true}>
+        {items.map((item, index) => (
+          <ListItem key={index} disableGutters>
+            <ListItemIcon>
+              { item.files.map((fileType) => (
+                fileType === "video" ? 
+                <VideocamIcon key={fileType} /> :
+                fileType === "audio" ?
+                <AudiotrackIcon key={fileType} /> :
+                fileType === "images" || fileType === "image" ?
+                <ImageIcon key={fileType} /> : 
+                null
+              )) }
+            </ListItemIcon>
+            <ListItemText primary={item.title} />
+          </ListItem>
+        ))}
+      </List>
+    </>
+  );
+}

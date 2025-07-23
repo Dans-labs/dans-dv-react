@@ -10,7 +10,9 @@
     "lint": "turbo lint",
     "format": "prettier --experimental-ternaries --write \"**/*.{ts,tsx,md}\"",
     "dev:eosc": "turbo dev --filter=@dans-dv/eosc",
-    "build:eosc": "turbo build --filter=@dans-dv/eosc"
+    "build:eosc": "turbo build --filter=@dans-dv/eosc",
+    "dev:ssh": "turbo dev --filter=@dans-dv/ssh",
+    "build:ssh": "turbo build --filter=@dans-dv/ssh"
   },
   "keywords": [],
   "author": "",

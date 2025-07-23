@@ -64,6 +64,9 @@ const FileActionOptions = ({ file, type, useAppDispatch }: {file: any; type: any
     : fileRoles;
 
   return (
+    options.length === 0 ? 
+      "No options available"
+    :
     <Autocomplete
       id={`${file.name}_${type}`}
       size="small"

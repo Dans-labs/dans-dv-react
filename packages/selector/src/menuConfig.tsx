@@ -55,7 +55,7 @@ export const getMenuItems = (config: MenuConfig): MenuItemConfig[] => [
   },
   {
     key: 'fileUpload',
-    label: 'Enhanced file upload',
+    label: 'Large file uploads and processing',
     isEnabled: !!config.fileUpload,
     renderDrawerContent: (props: DrawerRenderProps) => <FileUpload {...props} />,
     icon: <CloudUploadIcon />,

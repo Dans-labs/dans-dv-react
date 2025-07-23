@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Dataverse injector EOSC
+// @name         Dataverse injector SSH
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-19
+// @version      2025-07-23
 // @description  Inject custom React app into live Dataverse instance
-// @match        https://dataverse.eosc.dansdemo.nl/dataset.xhtml*
+// @match        https://demo.ssh.datastations.nl/dataset.xhtml*
 // @grant        none
 // ==/UserScript==
 

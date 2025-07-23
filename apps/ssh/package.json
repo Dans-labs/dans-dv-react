@@ -1,0 +1,28 @@
+{
+  "name": "@dans-dv/ssh",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@dans-dv/selector": "workspace:*",
+    "@dans-dv/wrapper": "workspace:*",
+    "@emotion/react": "^11.14.0",
+    "@emotion/cache": "^11.14.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@dans-dv/eslint-config": "workspace:*",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "vite": "^6.3.5",
+    "vite-plugin-checker": "^0.9.3"
+  }
+}
